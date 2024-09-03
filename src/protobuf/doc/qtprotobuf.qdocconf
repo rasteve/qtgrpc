@@ -82,3 +82,4 @@ tagfile                 = qtprotobuf.tags
 
 # Enforce zero documentation warnings
 warninglimit = 0
+warninglimit.enabled = true

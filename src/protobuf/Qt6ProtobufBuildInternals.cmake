@@ -139,7 +139,8 @@ QT_END_NAMESPACE\n")
             set(object_library ${target}_protobuf_module_registration)
 
             add_library(${object_library} OBJECT ${registration_file})
-            qt_internal_link_internal_platform_for_object_library(${object_library})
+            qt_internal_link_internal_platform_for_object_library(${object_library}
+                PARENT_TARGET ${target})
             _qt_internal_copy_dependency_properties(${object_library}
                 ${target} PRIVATE_ONLY)
 

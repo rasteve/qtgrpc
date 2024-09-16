@@ -9,7 +9,7 @@
     in the Qt GRPC module.
 
     \list
-    \li \l {Client Methods of the Qt GRPC Service}
+    \li \l {clientguide} {Qt GRPC Client Guide}
     \li \l {The qtgrpcgen Tool}
     \li \l {CMake Commands in Qt6 GRPC}{CMake Commands}
         \list

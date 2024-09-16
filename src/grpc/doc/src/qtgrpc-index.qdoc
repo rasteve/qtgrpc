@@ -79,8 +79,8 @@
 
     \section1 Articles and Guides
     \list
+        \li \l{clientguide} {Qt GRPC Client Guide}
         \li \l{CMake Commands in Qt6 GRPC}
-        \li \l{Client Methods of the Qt GRPC Service}
     \endlist
 
     \section1 References

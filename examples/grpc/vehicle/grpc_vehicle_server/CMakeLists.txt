@@ -8,7 +8,6 @@ set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
 
 # Qt6::Grpc module is not used directly in this project. But this allows to find Qt6::Grpc's
 # dependencies without setting extra cmake module paths.
-find_package(Qt6 COMPONENTS Core)
 find_package(protobuf)
 find_package(gRPC)
 
@@ -54,7 +53,7 @@ add_custom_command(
 
 set_source_files_properties(${generated_files} PROPERTIES GENERATED TRUE)
 
-qt_add_executable(SimpleVehicleServer
+add_executable(SimpleVehicleServer
     ${generated_files}
     ${CMAKE_CURRENT_LIST_DIR}/serverrunner.cpp
     ${CMAKE_CURRENT_LIST_DIR}/serverrunner.h
@@ -69,7 +68,6 @@ target_include_directories(SimpleVehicleServer
 target_link_libraries(SimpleVehicleServer PRIVATE
     protobuf::libprotobuf
     gRPC::grpc++
-    Qt6::Core
 )
 
 install(TARGETS SimpleVehicleServer

@@ -5,11 +5,10 @@
 #include "naviservice.grpc.pb.h"
 #include "vehicleservice.grpc.pb.h"
 
-#include <QtCore/QDebug>
-#include <QtCore/QThread>
 #include <grpc++/grpc++.h>
 
 #include <chrono>
+#include <iostream>
 #include <memory>
 #include <thread>
 
@@ -146,10 +145,10 @@ void VehicleServer::run()
 
     std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
     if (!server) {
-        qWarning() << "Creating grpc::Server failed.";
+        std::cout << "Creating grpc::Server failed." << std::endl;
         return;
     }
 
-    qDebug() << "Server listening on " << serverUri;
+    std::cout << "Server listening on " << serverUri << std::endl;
     server->Wait();
 }

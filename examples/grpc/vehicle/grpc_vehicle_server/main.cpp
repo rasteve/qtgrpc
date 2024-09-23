@@ -3,8 +3,6 @@
 
 #include "serverrunner.h"
 
-#include <QtCore/QCoreApplication>
-
 #include <memory>
 
 int main()

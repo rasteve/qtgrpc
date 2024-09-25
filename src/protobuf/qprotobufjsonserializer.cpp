@@ -5,7 +5,7 @@
 
 #include <QtProtobuf/private/protobuffieldpresencechecker_p.h>
 #include <QtProtobuf/private/qprotobufregistration_p.h>
-#include <QtProtobuf/private/qprotobufserializer_p.h>
+#include <QtProtobuf/private/qprotobufserializerbase_p.h>
 #include <QtProtobuf/private/qtprotobufdefs_p.h>
 #include <QtProtobuf/private/qtprotobufserializerhelpers_p.h>
 
@@ -61,6 +61,29 @@ inline QString convertJsonKeyToJsonName(QStringView name)
 }
 
 }
+
+class QProtobufJsonSerializerImpl final : public QProtobufSerializerBase
+{
+public:
+    QProtobufJsonSerializerImpl() = default;
+    ~QProtobufJsonSerializerImpl();
+
+    const QJsonObject &result() const { return m_result; }
+
+    void reset();
+
+private:
+    bool serializeEnum(QVariant &value, const QProtobufFieldInfo &fieldInfo) override;
+    bool serializeScalarField(const QVariant &value, const QProtobufFieldInfo &fieldInfo) override;
+    void serializeMessageFieldBegin() override;
+    void serializeMessageFieldEnd(const QProtobufMessage *message,
+                                  const QProtobufFieldInfo &fieldInfo) override;
+
+    QJsonObject m_result;
+    QList<QJsonObject> m_state;
+
+    Q_DISABLE_COPY_MOVE(QProtobufJsonSerializerImpl)
+};
 
 class QProtobufJsonSerializerPrivate final
 {
@@ -261,91 +284,6 @@ public:
         }
         return {};
     }
-
-    void serializeProperty(QVariant propertyValue, const QProtobufFieldInfo &fieldInfo)
-    {
-        QMetaType metaType = propertyValue.metaType();
-        auto userType = propertyValue.userType();
-
-        if (metaType.id() == QMetaType::UnknownType || propertyValue.isNull())
-            return;
-
-        if (metaType.flags() & QMetaType::IsPointer) {
-            auto store = activeValue.toObject();
-            activeValue = QJsonObject();
-            auto *messageProperty = propertyValue.value<QProtobufMessage *>();
-            serializeObjectImpl(messageProperty);
-            store.insert(fieldInfo.jsonName().toString(), activeValue);
-            activeValue = store;
-            return;
-        }
-
-        const auto fieldFlags = fieldInfo.fieldFlags();
-
-        if (propertyValue.canView(QMetaType::fromType<QProtobufRepeatedIterator>())) {
-            QProtobufRepeatedIterator propertyIt = propertyValue.view<QProtobufRepeatedIterator>();
-            if (fieldFlags & QtProtobufPrivate::FieldFlag::Repeated
-                && !(fieldFlags & QtProtobufPrivate::FieldFlag::Enum)) {
-                const auto fieldName = fieldInfo.jsonName().toString();
-                QJsonObject activeObject = activeValue.toObject();
-                activeValue = activeObject.value(fieldName).toArray();
-                while (propertyIt.hasNext())
-                    serializeObject(propertyIt.next(), fieldInfo);
-                if (!activeValue.toArray().empty())
-                    activeObject.insert(fieldName, activeValue);
-                activeValue = activeObject;
-            } else {
-                while (propertyIt.hasNext())
-                    serializeObject(propertyIt.next(), fieldInfo);
-            }
-            return;
-        }
-
-        if (fieldFlags & QtProtobufPrivate::FieldFlag::Enum) {
-            QJsonObject activeObject = activeValue.toObject();
-            if (fieldFlags & QtProtobufPrivate::FieldFlag::Repeated) {
-                const auto stringList = propertyValue.value<QStringList>();
-                if (!stringList.isEmpty()) {
-                    activeObject.insert(fieldInfo.jsonName().toString(),
-                                        QProtobufJsonSerializerPrivate::serializeList<
-                                            QStringList>(stringList));
-                }
-            } else {
-                const auto metaEnum = getMetaEnum(metaType);
-                Q_ASSERT(metaEnum.isValid());
-                activeObject
-                    .insert(fieldInfo.jsonName().toString(),
-                            QString::fromUtf8(metaEnum.key(propertyValue.value<int32_t>())));
-            }
-            activeValue = activeObject;
-            return;
-        }
-
-        auto handler = QtProtobufPrivate::findHandler(metaType);
-        if (handler.serializer) {
-            handler.serializer([this](const QProtobufMessage *message,
-                                      const QProtobufFieldInfo &
-                                          fieldInfo) { this->serializeObject(message, fieldInfo); },
-                               propertyValue.constData(), fieldInfo);
-        } else {
-            QJsonObject activeObject = activeValue.toObject();
-            auto iter = handlers.constFind(userType);
-            if (iter == handlers.constEnd())
-                return;
-            const auto &handler = iter.value();
-            if (!handler.isPresent(propertyValue) && !isOneofOrOptionalField(fieldInfo))
-                return;
-
-            activeObject.insert(fieldInfo.jsonName().toString(),
-                                handler.serializer
-                                    ? handler.serializer(propertyValue)
-                                    : QJsonValue::fromVariant(propertyValue));
-            activeValue = activeObject;
-        }
-    }
-
-    void serializeObject(const QProtobufMessage *message, const QProtobufFieldInfo &fieldInfo);
-    void serializeObjectImpl(const QProtobufMessage *message);
 
     template <typename T>
     static QVariant deserializeCommon(const QJsonValue &value, bool &ok)
@@ -717,7 +655,91 @@ public:
 
     QVariant cachedPropertyValue;
     int cachedIndex = -1;
+
+    QProtobufJsonSerializerImpl serializer;
 };
+
+QProtobufJsonSerializerImpl::~QProtobufJsonSerializerImpl() = default;
+
+void QProtobufJsonSerializerImpl::reset()
+{
+    m_result = {};
+    m_state.clear();
+}
+
+bool QProtobufJsonSerializerImpl::serializeEnum(QVariant &value,
+                                                const QProtobufFieldInfo &fieldInfo)
+
+{
+    const auto jsonName = fieldInfo.jsonName();
+    if (fieldInfo.fieldFlags().testFlag(QtProtobufPrivate::FieldFlag::Repeated)) {
+        if (!value.convert(QMetaType::fromType<QStringList>()))
+            return false;
+        if (!ProtobufFieldPresenceChecker::isPresent<QStringList>(value))
+            return true;
+        m_result.insert(jsonName.toString(),
+                        QProtobufJsonSerializerPrivate::serializeList<QStringList>(value));
+    } else {
+        if (!value.convert(QMetaType::fromType<QString>()))
+            return false;
+        if (!ProtobufFieldPresenceChecker::isPresent<QString>(value)
+            && !isOneofOrOptionalField(fieldInfo.fieldFlags())) {
+            return true;
+        }
+        m_result.insert(jsonName.toString(),
+                        QProtobufJsonSerializerPrivate::serializeCommon<QString>(value));
+    }
+    return true;
+}
+
+bool QProtobufJsonSerializerImpl::serializeScalarField(const QVariant &value,
+                                                       const QProtobufFieldInfo &fieldInfo)
+{
+    const auto it = QProtobufJsonSerializerPrivate::handlers.constFind(value.userType());
+    // Is not a protobuf scalar value type
+    if (it == QProtobufJsonSerializerPrivate::handlers.cend())
+        return false;
+
+    // Field is empty
+    if (!it->isPresent(value) && !isOneofOrOptionalField(fieldInfo.fieldFlags()))
+        return true;
+
+    // If serializer is not defined we should use the standard QJsonValue cast from variant
+    m_result.insert(fieldInfo.jsonName().toString(),
+                    it->serializer ? it->serializer(value) : QJsonValue::fromVariant(value));
+    return true;
+}
+
+void QProtobufJsonSerializerImpl::serializeMessageFieldBegin()
+{
+    m_state.emplaceBack(std::move(m_result));
+    m_result = {};
+}
+
+void QProtobufJsonSerializerImpl::serializeMessageFieldEnd(const QProtobufMessage *message,
+                                                           const QProtobufFieldInfo &field)
+{
+    QJsonObject store = m_state.takeLast();
+    QString fieldName = field.jsonName().toString();
+    if (field.fieldFlags().testFlag(QtProtobufPrivate::FieldFlag::Repeated)) {
+        // Repeated fields are stored in array property
+        // "repeatedField": [{...}, {...}, ...]
+        QJsonArray array = store.value(fieldName).toArray();
+        array.append(m_result);
+        store.insert(fieldName, array);
+    } else if (field.fieldFlags().testFlag(QtProtobufPrivate::FieldFlag::Map)) {
+        // Maps are stored as fields in inner JSON object
+        // "mapField": { "key1": "value1", ... }
+        QJsonObject mapObject = store.value(fieldName).toObject();
+        // We don't need to serialize key in general, since all JSON object fields should be
+        // represented as strings, and types that can be map keys have valid string converters.
+        mapObject.insert(message->property("key").toString(), m_result.value("value"_L1));
+        store.insert(fieldName, mapObject);
+    } else {
+        store.insert(fieldName, m_result);
+    }
+    m_result = store;
+}
 
 bool QProtobufJsonSerializerPrivate::storeCachedValue(QProtobufMessage *message)
 {
@@ -734,24 +756,6 @@ bool QProtobufJsonSerializerPrivate::storeCachedValue(QProtobufMessage *message)
 }
 
 QProtobufJsonSerializerPrivate::SerializerRegistry QProtobufJsonSerializerPrivate::handlers = {};
-
-void QProtobufJsonSerializerPrivate::serializeObjectImpl(const QProtobufMessage *message)
-{
-    // if a message is not initialized, just return empty { }
-    if (message) {
-        auto ordering = message->propertyOrdering();
-        Q_ASSERT(ordering != nullptr);
-        for (int index = 0; index < ordering->fieldCount(); ++index) {
-            int fieldIndex = ordering->fieldNumber(index);
-            Q_ASSERT_X(fieldIndex <= ProtobufFieldNumMax && fieldIndex >= ProtobufFieldNumMin, "",
-                       "fieldIndex is out of range");
-            QProtobufFieldInfo fieldInfo(*ordering, index);
-            QVariant propertyValue = QtProtobufSerializerHelpers::messageProperty(message,
-                                                                                  fieldInfo);
-            serializeProperty(propertyValue, fieldInfo);
-        }
-    }
-}
 
 void QProtobufJsonSerializerPrivate::clearError()
 {
@@ -786,12 +790,11 @@ QString QProtobufJsonSerializer::lastErrorString() const
 QByteArray QProtobufJsonSerializer::serializeMessage(const QProtobufMessage *message) const
 {
     d_ptr->clearError();
-    d_ptr->activeValue = QJsonObject();
-    d_ptr->serializeObjectImpl(message);
-    QJsonDocument doc;
-    doc.setObject(d_ptr->activeValue.toObject());
-    d_ptr->activeValue = QJsonObject();
-    return doc.toJson(QJsonDocument::Compact);
+    d_ptr->serializer.reset();
+    d_ptr->serializer.serializeMessage(message);
+    auto result = QJsonDocument(d_ptr->serializer.result()).toJson(QJsonDocument::Compact);
+    d_ptr->serializer.reset();
+    return result;
 }
 
 bool QProtobufJsonSerializer::deserializeMessage(QProtobufMessage *message,
@@ -814,33 +817,6 @@ bool QProtobufJsonSerializer::deserializeMessage(QProtobufMessage *message,
     d_ptr->cachedPropertyValue.clear();
     d_ptr->cachedIndex = -1;
     return d_ptr->deserializeObject(message);
-}
-
-void QProtobufJsonSerializerPrivate::serializeObject(const QProtobufMessage *message,
-                                                     const QProtobufFieldInfo &fieldInfo)
-{
-    if (activeValue.isArray()) {
-        auto store = activeValue.toArray();
-        activeValue = QJsonObject();
-        serializeObjectImpl(message);
-        store.append(activeValue);
-        activeValue = store;
-    } else {
-        auto store = activeValue.toObject();
-        const QString fieldName = fieldInfo.jsonName().toString();
-        activeValue = QJsonObject();
-        if (fieldInfo.fieldFlags() & QtProtobufPrivate::FieldFlag::Map) {
-            QJsonObject mapObject = store.value(fieldName).toObject();
-            serializeObjectImpl(message);
-            mapObject.insert(message->property("key").toString(),
-                             activeValue.toObject().value("value"_L1));
-            store.insert(fieldName, mapObject);
-        } else {
-            serializeObjectImpl(message);
-            store.insert(fieldName, activeValue);
-        }
-        activeValue = store;
-    }
 }
 
 QT_END_NAMESPACE

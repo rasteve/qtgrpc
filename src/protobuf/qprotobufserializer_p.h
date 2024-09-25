@@ -24,6 +24,7 @@
 
 #include <QtProtobuf/private/protobuffieldpresencechecker_p.h>
 #include <QtProtobuf/private/qprotobufselfcheckiterator_p.h>
+#include <QtProtobuf/private/qprotobufserializerbase_p.h>
 #include <QtProtobuf/private/qtprotobuflogging_p.h>
 
 #include <QtCore/qendian.h>
@@ -36,6 +37,36 @@
 #include <type_traits>
 
 QT_BEGIN_NAMESPACE
+
+class QProtobufSerializerImpl final : public QProtobufSerializerBase
+{
+public:
+    QProtobufSerializerImpl() = default;
+    ~QProtobufSerializerImpl();
+
+    const QByteArray &result() const { return m_result; }
+
+    void reset();
+    void serializeUnknownFields(const QProtobufMessage *message);
+
+    bool preserveUnknownFields = true;
+
+private:
+    bool serializeEnum(QVariant &value,
+                       const QtProtobufPrivate::QProtobufFieldInfo &fieldInfo) override;
+    bool serializeScalarField(const QVariant &value,
+                              const QtProtobufPrivate::QProtobufFieldInfo &fieldInfo) override;
+    void serializeMessageFieldBegin() override;
+    void serializeMessageFieldEnd(const QProtobufMessage *message,
+                                  const QtProtobufPrivate::QProtobufFieldInfo &fieldInfo) override;
+
+    static QByteArray encodeHeader(int fieldIndex, QtProtobuf::WireTypes wireType);
+
+    QByteArray m_result;
+    QList<QByteArray> m_state;
+
+    Q_DISABLE_COPY_MOVE(QProtobufSerializerImpl)
+};
 
 class QProtobufSerializerPrivate
 {
@@ -459,7 +490,6 @@ public:
     [[nodiscard]]
     static bool decodeHeader(QProtobufSelfcheckIterator &it, int &fieldIndex,
                              QtProtobuf::WireTypes &wireType);
-    static QByteArray encodeHeader(int fieldIndex, QtProtobuf::WireTypes wireType);
 
     /*!
         Gets length of a byte-array and prepends to it its serialized length value
@@ -492,19 +522,10 @@ public:
     static void skipVarint(QProtobufSelfcheckIterator &it);
     static void skipLengthDelimited(QProtobufSelfcheckIterator &it);
 
-    void serializeObject(const QProtobufMessage *message,
-                         const QtProtobufPrivate::QProtobufFieldInfo &fieldInfo);
     bool deserializeObject(QProtobufMessage *message);
-
-    void serializeEnumList(const QList<QtProtobuf::int64> &value,
-                           const QtProtobufPrivate::QProtobufFieldInfo &fieldInfo);
 
     bool deserializeEnumList(QList<QtProtobuf::int64> &value);
 
-    void serializeMessage(const QProtobufMessage *message);
-
-    void serializeProperty(QVariant propertyValue,
-                           const QtProtobufPrivate::QProtobufFieldInfo &fieldInfo);
     [[nodiscard]] bool deserializeProperty(QProtobufMessage *message);
 
     void setDeserializationError(QAbstractProtobufSerializer::Error error,
@@ -520,25 +541,18 @@ public:
     QString lastErrorString;
 
     QProtobufSelfcheckIterator it;
-    QByteArray result;
 
     bool preserveUnknownFields = true;
-
-    static const QtProtobufPrivate::QProtobufFieldInfo mapValueOrdering;
 
     QVariant cachedPropertyValue;
     QProtobufRepeatedIterator cachedRepeatedIterator;
     int cachedIndex = -1;
 
+    QProtobufSerializerImpl serializer;
+
 private:
     Q_DISABLE_COPY_MOVE(QProtobufSerializerPrivate)
 };
-
-inline bool isOneofOrOptionalField(const QtProtobufPrivate::QProtobufFieldInfo &fieldInfo)
-{
-    return fieldInfo.fieldFlags().testAnyFlags({ QtProtobufPrivate::FieldFlag::Oneof,
-                                                 QtProtobufPrivate::FieldFlag::Optional });
-}
 
 QT_END_NAMESPACE
 

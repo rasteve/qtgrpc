@@ -21,6 +21,7 @@ qt_internal_add_module(Protobuf
         qtprotobuflogging.cpp qtprotobuflogging_p.h
         qtprotobufserializerhelpers.cpp qtprotobufserializerhelpers_p.h
         qtprotobuftypes.cpp qtprotobuftypes.h
+        qprotobufserializerbase_p.h qprotobufserializerbase.cpp
     EXTRA_CMAKE_FILES
         "${CMAKE_CURRENT_SOURCE_DIR}/QtProtobufProperties.cmake.in"
     PUBLIC_LIBRARIES

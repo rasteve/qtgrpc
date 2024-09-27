@@ -6,6 +6,7 @@ qt_internal_add_module(Protobuf
         protobuffieldpresencechecker_p.h
         qtprotobufglobal.h
         qabstractprotobufserializer.cpp qabstractprotobufserializer.h
+        qprotobufdeserializerbase_p.h qprotobufdeserializerbase.cpp
         qprotobufjsonserializer.cpp qprotobufjsonserializer.h
         qprotobuflazymessagepointer.h
         qprotobufmessage.cpp qprotobufmessage.h qprotobufmessage_p.h

@@ -23,9 +23,10 @@
 #include <QtProtobuf/qtprotobuftypes.h>
 
 #include <QtProtobuf/private/protobuffieldpresencechecker_p.h>
+#include <QtProtobuf/private/qtprotobuflogging_p.h>
+#include <QtProtobuf/private/qprotobufdeserializerbase_p.h>
 #include <QtProtobuf/private/qprotobufselfcheckiterator_p.h>
 #include <QtProtobuf/private/qprotobufserializerbase_p.h>
-#include <QtProtobuf/private/qtprotobuflogging_p.h>
 
 #include <QtCore/qendian.h>
 #include <QtCore/qstring.h>
@@ -66,6 +67,40 @@ private:
     QList<QByteArray> m_state;
 
     Q_DISABLE_COPY_MOVE(QProtobufSerializerImpl)
+};
+
+class QProtobufDeserializerImpl final : public QProtobufDeserializerBase
+{
+public:
+    explicit QProtobufDeserializerImpl(QProtobufSerializerPrivate *parent);
+    ~QProtobufDeserializerImpl();
+
+    void reset(QByteArrayView data);
+
+    QProtobufSelfcheckIterator m_it;
+
+private:
+    void setError(QAbstractProtobufSerializer::Error error, QAnyStringView errorString) override;
+    bool deserializeEnum(QVariant &value,
+                         const QtProtobufPrivate::QProtobufFieldInfo &fieldInfo) override;
+    int nextFieldIndex(QProtobufMessage *message) override;
+    bool deserializeScalarField(QVariant &value,
+                                const QtProtobufPrivate::QProtobufFieldInfo &fieldInfo) override;
+
+    qsizetype skipField(const QProtobufSelfcheckIterator &fieldBegin);
+    void skipVarint();
+    void skipLengthDelimited();
+    void setUnexpectedEndOfStreamError();
+
+    [[nodiscard]]
+    static bool decodeHeader(QProtobufSelfcheckIterator &it, int &fieldIndex,
+                             QtProtobuf::WireTypes &wireType);
+
+    QtProtobuf::WireTypes m_wireType = QtProtobuf::WireTypes::Unknown;
+    QList<QByteArrayView::iterator> m_state;
+    QProtobufSerializerPrivate *m_parent = nullptr;
+
+    Q_DISABLE_COPY_MOVE(QProtobufDeserializerImpl)
 };
 
 class QProtobufSerializerPrivate
@@ -175,7 +210,7 @@ public:
         QtProtobuf::WireTypes wireType; // Serialization WireType
     };
 
-    QProtobufSerializerPrivate() = default;
+    QProtobufSerializerPrivate();
     ~QProtobufSerializerPrivate() = default;
     // ###########################################################################
     //                                Serializers
@@ -487,10 +522,6 @@ public:
         return { result };
     }
 
-    [[nodiscard]]
-    static bool decodeHeader(QProtobufSelfcheckIterator &it, int &fieldIndex,
-                             QtProtobuf::WireTypes &wireType);
-
     /*!
         Gets length of a byte-array and prepends to it its serialized length value
         using the appropriate serialization algorithm
@@ -515,40 +546,16 @@ public:
         return s(variantValue.value<T>(), header);
     }
 
-    // this set of 3 methods is used to skip bytes corresponding to an unexpected property
-    // in a serialized message met while the message being deserialized
-    static qsizetype skipSerializedFieldBytes(QProtobufSelfcheckIterator &it,
-                                              QtProtobuf::WireTypes type);
-    static void skipVarint(QProtobufSelfcheckIterator &it);
-    static void skipLengthDelimited(QProtobufSelfcheckIterator &it);
-
-    bool deserializeObject(QProtobufMessage *message);
-
-    bool deserializeEnumList(QList<QtProtobuf::int64> &value);
-
-    [[nodiscard]] bool deserializeProperty(QProtobufMessage *message);
-
-    void setDeserializationError(QAbstractProtobufSerializer::Error error,
-                                 const QString &errorString);
     void clearError();
-    void setUnexpectedEndOfStreamError();
-
-    [[nodiscard]] bool storeCachedValue(QProtobufMessage *message);
-    void clearCachedValue();
 
     QAbstractProtobufSerializer::Error lastError =
             QAbstractProtobufSerializer::Error::UnknownType;
     QString lastErrorString;
 
-    QProtobufSelfcheckIterator it;
-
     bool preserveUnknownFields = true;
 
-    QVariant cachedPropertyValue;
-    QProtobufRepeatedIterator cachedRepeatedIterator;
-    int cachedIndex = -1;
-
     QProtobufSerializerImpl serializer;
+    QProtobufDeserializerImpl deserializer;
 
 private:
     Q_DISABLE_COPY_MOVE(QProtobufSerializerPrivate)

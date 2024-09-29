@@ -19,7 +19,6 @@
 #include <QtCore/qvariant.h>
 
 #include <cmath>
-#include <type_traits>
 
 QT_BEGIN_NAMESPACE
 
@@ -146,8 +145,7 @@ public:
                  ProtobufFieldPresenceChecker::isPresent<L> };
     }
 
-    template<typename T,
-              std::enable_if_t<std::is_same_v<T, float> || std::is_same_v<T, double>, bool> = true>
+    template<typename T, if_json_floating_point<T> = true>
     static bool isPresent(const QVariant &value)
     {
         const T val = value.value<T>();

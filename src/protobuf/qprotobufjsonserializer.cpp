@@ -156,63 +156,7 @@ public:
 
     using SerializerRegistry = QHash<int/*metatypeid*/, SerializationHandlers>;
 
-    QProtobufJsonSerializerPrivate() : deserializer(this)
-    {
-        [[maybe_unused]] static bool initialized = []() -> bool {
-            handlers[qMetaTypeId<QtProtobuf::int32>()] = createCommonHandler<QtProtobuf::int32>();
-            handlers[qMetaTypeId<QtProtobuf::sfixed32>()] = createCommonHandler<
-                QtProtobuf::sfixed32>();
-            handlers[qMetaTypeId<QtProtobuf::sint32>()] = createCommonHandler<QtProtobuf::sint32>();
-            handlers[qMetaTypeId<QtProtobuf::uint32>()] = createCommonHandler<QtProtobuf::uint32>();
-            handlers[qMetaTypeId<QtProtobuf::fixed32>()] = createCommonHandler<
-                QtProtobuf::fixed32>();
-            handlers[qMetaTypeId<QtProtobuf::sint64>()] = createCommonHandler<QtProtobuf::sint64>();
-            handlers[qMetaTypeId<QtProtobuf::int64>()] = createCommonHandler<QtProtobuf::int64>();
-            handlers[qMetaTypeId<QtProtobuf::sfixed64>()] = createCommonHandler<
-                QtProtobuf::sfixed64>();
-            handlers[qMetaTypeId<QtProtobuf::uint64>()] = createCommonHandler<QtProtobuf::uint64>();
-            handlers[qMetaTypeId<QtProtobuf::fixed64>()] = createCommonHandler<
-                QtProtobuf::fixed64>();
-            handlers[qMetaTypeId<bool>()] = createCommonHandler<bool>();
-            handlers[QMetaType::QString] = createCommonHandler<QString>();
-            handlers[QMetaType::QByteArray] = createCommonHandler<QByteArray>();
-            handlers[QMetaType::Float] = { serializeCommon<float>, deserializeCommon<float>,
-                                           QProtobufJsonSerializerPrivate::isPresent<float> };
-            handlers[QMetaType::Double] = { serializeCommon<double>, deserializeCommon<double>,
-                                            isPresent<double> };
-
-            handlers[qMetaTypeId<QtProtobuf::boolList>()] = createCommonListHandler<
-                QtProtobuf::boolList, bool>();
-            handlers[qMetaTypeId<QtProtobuf::int32List>()] = createCommonListHandler<
-                QtProtobuf::int32List, QtProtobuf::int32>();
-            handlers[qMetaTypeId<QtProtobuf::int64List>()] = createCommonListHandler<
-                QtProtobuf::int64List, QtProtobuf::int64>();
-            handlers[qMetaTypeId<QtProtobuf::sint32List>()] = createCommonListHandler<
-                QtProtobuf::sint32List, QtProtobuf::sint32>();
-            handlers[qMetaTypeId<QtProtobuf::sint64List>()] = createCommonListHandler<
-                QtProtobuf::sint64List, QtProtobuf::sint64>();
-            handlers[qMetaTypeId<QtProtobuf::uint32List>()] = createCommonListHandler<
-                QtProtobuf::uint32List, QtProtobuf::uint32>();
-            handlers[qMetaTypeId<QtProtobuf::uint64List>()] = createCommonListHandler<
-                QtProtobuf::uint64List, QtProtobuf::uint64>();
-            handlers[qMetaTypeId<QtProtobuf::fixed32List>()] = createCommonListHandler<
-                QtProtobuf::fixed32List, QtProtobuf::fixed32>();
-            handlers[qMetaTypeId<QtProtobuf::fixed64List>()] = createCommonListHandler<
-                QtProtobuf::fixed64List, QtProtobuf::fixed64>();
-            handlers[qMetaTypeId<QtProtobuf::sfixed32List>()] = createCommonListHandler<
-                QtProtobuf::sfixed32List, QtProtobuf::sfixed32>();
-            handlers[qMetaTypeId<QtProtobuf::sfixed64List>()] = createCommonListHandler<
-                QtProtobuf::sfixed64List, QtProtobuf::sfixed64>();
-            handlers[qMetaTypeId<QtProtobuf::floatList>()] = createCommonListHandler<
-                QtProtobuf::floatList, float>();
-            handlers[qMetaTypeId<QtProtobuf::doubleList>()] = createCommonListHandler<
-                QtProtobuf::doubleList, double>();
-            handlers[qMetaTypeId<QStringList>()] = createCommonListHandler<QStringList, QString>();
-            handlers[qMetaTypeId<QByteArrayList>()] = createCommonListHandler<QByteArrayList,
-                                                                              QByteArray>();
-            return true;
-        }();
-    }
+    QProtobufJsonSerializerPrivate();
     ~QProtobufJsonSerializerPrivate() = default;
 
     void clearError();
@@ -469,6 +413,60 @@ void QProtobufJsonDeserializerImpl::setInvalidFormatError()
 }
 
 QProtobufJsonSerializerPrivate::SerializerRegistry QProtobufJsonSerializerPrivate::handlers = {};
+
+QProtobufJsonSerializerPrivate::QProtobufJsonSerializerPrivate() : deserializer(this)
+{
+    [[maybe_unused]] static bool initialized = []() -> bool {
+        handlers[qMetaTypeId<QtProtobuf::int32>()] = createCommonHandler<QtProtobuf::int32>();
+        handlers[qMetaTypeId<QtProtobuf::sfixed32>()] = createCommonHandler<QtProtobuf::sfixed32>();
+        handlers[qMetaTypeId<QtProtobuf::sint32>()] = createCommonHandler<QtProtobuf::sint32>();
+        handlers[qMetaTypeId<QtProtobuf::uint32>()] = createCommonHandler<QtProtobuf::uint32>();
+        handlers[qMetaTypeId<QtProtobuf::fixed32>()] = createCommonHandler<QtProtobuf::fixed32>();
+        handlers[qMetaTypeId<QtProtobuf::sint64>()] = createCommonHandler<QtProtobuf::sint64>();
+        handlers[qMetaTypeId<QtProtobuf::int64>()] = createCommonHandler<QtProtobuf::int64>();
+        handlers[qMetaTypeId<QtProtobuf::sfixed64>()] = createCommonHandler<QtProtobuf::sfixed64>();
+        handlers[qMetaTypeId<QtProtobuf::uint64>()] = createCommonHandler<QtProtobuf::uint64>();
+        handlers[qMetaTypeId<QtProtobuf::fixed64>()] = createCommonHandler<QtProtobuf::fixed64>();
+        handlers[qMetaTypeId<bool>()] = createCommonHandler<bool>();
+        handlers[QMetaType::QString] = createCommonHandler<QString>();
+        handlers[QMetaType::QByteArray] = createCommonHandler<QByteArray>();
+        handlers[QMetaType::Float] = { serializeCommon<float>, deserializeCommon<float>,
+                                       QProtobufJsonSerializerPrivate::isPresent<float> };
+        handlers[QMetaType::Double] = { serializeCommon<double>, deserializeCommon<double>,
+                                        isPresent<double> };
+
+        handlers[qMetaTypeId<QtProtobuf::boolList>()] = createCommonListHandler<
+            QtProtobuf::boolList, bool>();
+        handlers[qMetaTypeId<QtProtobuf::int32List>()] = createCommonListHandler<
+            QtProtobuf::int32List, QtProtobuf::int32>();
+        handlers[qMetaTypeId<QtProtobuf::int64List>()] = createCommonListHandler<
+            QtProtobuf::int64List, QtProtobuf::int64>();
+        handlers[qMetaTypeId<QtProtobuf::sint32List>()] = createCommonListHandler<
+            QtProtobuf::sint32List, QtProtobuf::sint32>();
+        handlers[qMetaTypeId<QtProtobuf::sint64List>()] = createCommonListHandler<
+            QtProtobuf::sint64List, QtProtobuf::sint64>();
+        handlers[qMetaTypeId<QtProtobuf::uint32List>()] = createCommonListHandler<
+            QtProtobuf::uint32List, QtProtobuf::uint32>();
+        handlers[qMetaTypeId<QtProtobuf::uint64List>()] = createCommonListHandler<
+            QtProtobuf::uint64List, QtProtobuf::uint64>();
+        handlers[qMetaTypeId<QtProtobuf::fixed32List>()] = createCommonListHandler<
+            QtProtobuf::fixed32List, QtProtobuf::fixed32>();
+        handlers[qMetaTypeId<QtProtobuf::fixed64List>()] = createCommonListHandler<
+            QtProtobuf::fixed64List, QtProtobuf::fixed64>();
+        handlers[qMetaTypeId<QtProtobuf::sfixed32List>()] = createCommonListHandler<
+            QtProtobuf::sfixed32List, QtProtobuf::sfixed32>();
+        handlers[qMetaTypeId<QtProtobuf::sfixed64List>()] = createCommonListHandler<
+            QtProtobuf::sfixed64List, QtProtobuf::sfixed64>();
+        handlers[qMetaTypeId<QtProtobuf::floatList>()] = createCommonListHandler<
+            QtProtobuf::floatList, float>();
+        handlers[qMetaTypeId<QtProtobuf::doubleList>()] = createCommonListHandler<
+            QtProtobuf::doubleList, double>();
+        handlers[qMetaTypeId<QStringList>()] = createCommonListHandler<QStringList, QString>();
+        handlers[qMetaTypeId<QByteArrayList>()] = createCommonListHandler<QByteArrayList,
+                                                                          QByteArray>();
+        return true;
+    }();
+}
 
 void QProtobufJsonSerializerPrivate::clearError()
 {

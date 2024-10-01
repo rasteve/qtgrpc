@@ -209,13 +209,13 @@ T deserialize(const QJsonValue &value, bool &ok)
 {
     ok = true;
     QByteArray data = value.toVariant().toByteArray();
-    if (data.toLower() == NegInfinityLower)
+    if (data.compare(NegInfinityLower, Qt::CaseInsensitive) == 0)
         return -std::numeric_limits<T>::infinity();
 
-    if (data.toLower() == InfinityLower)
+    if (data.compare(InfinityLower, Qt::CaseInsensitive) == 0)
         return std::numeric_limits<T>::infinity();
 
-    if (data.toLower() == NaNLower)
+    if (data.compare(NaNLower, Qt::CaseInsensitive) == 0)
         return T(NAN);
 
     if constexpr (std::is_same_v<T, float>)

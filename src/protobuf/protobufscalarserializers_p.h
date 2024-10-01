@@ -142,7 +142,7 @@ using if_non_packed_compatible = std::enable_if_t<is_non_packed_compatible<V>::v
 [[nodiscard]] QByteArray serializeVarintCommonImpl(quint64 value);
 
 template <typename V, if_unsigned_int<V> = true>
-[[nodiscard]] QByteArray serializeVarintCommon(const V &value)
+[[nodiscard]] QByteArray serializeVarintCommon(V value)
 {
     return serializeVarintCommonImpl(quint64(value));
 }

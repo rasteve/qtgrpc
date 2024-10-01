@@ -197,12 +197,10 @@ template <typename V, if_zigzag_int<V> = true>
 [[nodiscard]] QByteArray serializeBasic(const V &value)
 {
     using UV = std::make_unsigned_t<V>;
-    UV uValue = 0;
 
     // Use ZigZag convertion first and apply unsigned variant next
     V zigZagValue = (value << 1) ^ (value >> (sizeof(UV) * 8 - 1));
-    uValue = static_cast<UV>(zigZagValue);
-    return serializeBasic(uValue);
+    return serializeBasic(static_cast<UV>(zigZagValue));
 }
 
 template <typename V, if_signed_int<V> = true>

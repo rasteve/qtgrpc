@@ -313,9 +313,7 @@ template <typename V, if_signed_int<V> = false>
     auto opt = deserializeVarintCommon<QtProtobuf::uint64>(it);
     if (!opt)
         return false;
-    QtProtobuf::uint64 unsignedValue = *opt;
-    V value = static_cast<V>(unsignedValue);
-    variantValue = QVariant::fromValue(value);
+    variantValue = QVariant::fromValue(static_cast<V>(*opt));
     return true;
 }
 

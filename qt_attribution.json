@@ -41,6 +41,7 @@
         "Homepage": "https://grpc.io",
         "License": "Apache License 2.0",
         "LicenseId": "Apache-2.0",
+        "LicenseFile": "LICENSE.Apache-2.0.txt",
         "Copyright": "Copyright 2015 gRPC authors.",
         "Version": "1.50.1"
     }

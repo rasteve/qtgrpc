@@ -252,6 +252,7 @@ template <typename V, if_non_packed_compatible<V> = true>
 // ###########################################################################
 //                                Deserializers
 // ###########################################################################
+
 template <typename V, if_unsigned_int<V> = true>
 [[nodiscard]] std::optional<V> deserializeVarintCommon(QProtobufSelfcheckIterator &it)
 {
@@ -263,11 +264,9 @@ template <typename V, if_unsigned_int<V> = true>
         quint64 byte = quint64(static_cast<unsigned char>(*it));
         value += (byte & 0b01111111) << k;
         k += 7;
-        if (((*it) & 0b10000000) == 0)
+        if (((*it++) & 0b10000000) == 0)
             break;
-        ++it;
     }
-    ++it;
     return { V(value) };
 }
 

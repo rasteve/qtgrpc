@@ -226,10 +226,10 @@ template <typename V, if_length_delimited<V> = true>
 template <typename V, if_not_length_delimited<V> = true>
 [[nodiscard]] QByteArray serializeListType(const QList<V> &listValue)
 {
-    if (listValue.isEmpty())
-        return {};
-
     QByteArray serializedList;
+    if (listValue.isEmpty())
+        return serializedList;
+
     for (auto &value : listValue)
         serializedList.append(serializeBasic<V>(value));
 

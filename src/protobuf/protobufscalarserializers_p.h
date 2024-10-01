@@ -139,25 +139,12 @@ using if_non_packed_compatible = std::enable_if_t<is_non_packed_compatible<V>::v
 //                                Serializers
 // ###########################################################################
 
+[[nodiscard]] QByteArray serializeVarintCommonImpl(quint64 value);
+
 template <typename V, if_unsigned_int<V> = true>
 [[nodiscard]] QByteArray serializeVarintCommon(const V &value)
 {
-    if (value == 0)
-        return QByteArray(1, char(0));
-
-    quint64 varint = value;
-    QByteArray result;
-
-    while (varint != 0) {
-        // Put 7 bits to result buffer and mark as "not last" (0b10000000)
-        result.append((varint & 0b01111111) | 0b10000000);
-        // Divide values to chunks of 7 bits and move to next chunk
-        varint >>= 7;
-    }
-
-    result.data()[result.size() - 1] &= ~0b10000000;
-
-    return result;
+    return serializeVarintCommonImpl(quint64(value));
 }
 
 //---------------Integral and floating point types serializers---------------

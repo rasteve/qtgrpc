@@ -5,6 +5,23 @@
 
 QT_BEGIN_NAMESPACE
 
+QByteArray ProtobufScalarSerializers::serializeVarintCommonImpl(quint64 value)
+{
+    if (value == 0)
+        return { 1, char(0) };
+
+    QByteArray result;
+    while (value != 0) {
+        // Put 7 bits to result buffer and mark as "not last" (0b10000000)
+        result.append((value & 0b01111111) | 0b10000000);
+        // Divide values to chunks of 7 bits and move to next chunk
+        value >>= 7;
+    }
+
+    result.back() &= ~0b10000000;
+    return result;
+}
+
 /*
     Gets length of a byte-array and prepends to it its serialized length value
     using the appropriate serialization algorithm
@@ -13,7 +30,7 @@ QT_BEGIN_NAMESPACE
 */
 QByteArray ProtobufScalarSerializers::prependLengthDelimitedSize(const QByteArray &data)
 {
-    return serializeVarintCommon<uint32_t>(data.size()) + data;
+    return serializeVarintCommonImpl(data.size()) + data;
 }
 
 std::optional<QByteArray>

@@ -288,7 +288,7 @@ template <typename V, if_unsigned_int<V> = false>
     auto opt = deserializeVarintCommon<V>(it);
     if (!opt)
         return false;
-    variantValue = QVariant::fromValue(opt.value());
+    variantValue = QVariant::fromValue(*opt);
     return true;
 }
 
@@ -299,7 +299,7 @@ template <typename V, if_zigzag_int<V> = false>
     auto opt = deserializeVarintCommon<UV>(it);
     if (!opt)
         return false;
-    UV unsignedValue = opt.value();
+    UV unsignedValue = *opt;
     V value = (unsignedValue >> 1) ^ (-1 * (unsignedValue & 1));
     variantValue = QVariant::fromValue<V>(value);
     return true;
@@ -313,7 +313,7 @@ template <typename V, if_signed_int<V> = false>
     auto opt = deserializeVarintCommon<QtProtobuf::uint64>(it);
     if (!opt)
         return false;
-    QtProtobuf::uint64 unsignedValue = opt.value();
+    QtProtobuf::uint64 unsignedValue = *opt;
     V value = static_cast<V>(unsignedValue);
     variantValue = QVariant::fromValue(value);
     return true;
@@ -343,7 +343,7 @@ template <typename V>
     auto opt = deserializeVarintCommon<QtProtobuf::uint64>(it);
     if (!opt)
         return false;
-    quint64 count = opt.value();
+    quint64 count = *opt;
     if (count > quint64(std::numeric_limits<qsizetype>::max()))
         return false;
     QProtobufSelfcheckIterator lastVarint = it + count;

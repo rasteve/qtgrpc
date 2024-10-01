@@ -261,8 +261,8 @@ template <typename V, if_unsigned_int<V> = true>
     while (true) {
         if (it.bytesLeft() == 0)
             return std::nullopt;
-        quint64 byte = quint64(static_cast<unsigned char>(*it));
-        value += (byte & 0b01111111) << k;
+        quint64 byte = quint64(static_cast<unsigned char>(*it) & 0b01111111);
+        value += byte << k;
         k += 7;
         if (((*it++) & 0b10000000) == 0)
             break;

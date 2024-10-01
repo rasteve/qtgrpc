@@ -74,6 +74,18 @@ constexpr inline bool IsJsonFloatingPoint<double> = true;
 template <typename T>
 using if_json_floating_point = std::enable_if_t<IsJsonFloatingPoint<T>, bool>;
 
+// Special value strings
+constexpr inline QLatin1StringView Infinity("Infinity");
+constexpr inline QLatin1StringView NegInfinity("-Infinity");
+constexpr inline QLatin1StringView NaN("NaN");
+
+constexpr inline QByteArrayView InfinityLower("infinity");
+constexpr inline QByteArrayView NegInfinityLower("-infinity");
+constexpr inline QByteArrayView NaNLower("nan");
+
+constexpr inline QLatin1StringView True("true");
+constexpr inline QLatin1StringView False("false");
+
 template <typename T, if_json_int<T> = true>
 QJsonValue serialize(T propertyValue)
 {
@@ -90,13 +102,13 @@ template <typename T, if_json_floating_point<T> = true>
 QJsonValue serialize(T propertyValue)
 {
     if (propertyValue == -std::numeric_limits<T>::infinity())
-        return QJsonValue(QLatin1String("-Infinity"));
+        return QJsonValue(NegInfinity);
 
     if (propertyValue == std::numeric_limits<T>::infinity())
-        return QJsonValue(QLatin1String("Infinity"));
+        return QJsonValue(Infinity);
 
     if (propertyValue != propertyValue)
-        return QJsonValue(QLatin1String("NaN"));
+        return QJsonValue(NaN);
 
     return QJsonValue(propertyValue);
 }
@@ -197,13 +209,13 @@ T deserialize(const QJsonValue &value, bool &ok)
 {
     ok = true;
     QByteArray data = value.toVariant().toByteArray();
-    if (data.toLower() == QByteArray("-infinity"))
+    if (data.toLower() == NegInfinityLower)
         return -std::numeric_limits<T>::infinity();
 
-    if (data.toLower() == QByteArray("infinity"))
+    if (data.toLower() == InfinityLower)
         return std::numeric_limits<T>::infinity();
 
-    if (data.toLower() == QByteArray("nan"))
+    if (data.toLower() == NaNLower)
         return T(NAN);
 
     if constexpr (std::is_same_v<T, float>)
@@ -219,10 +231,10 @@ bool deserialize(const QJsonValue &value, bool &ok)
         ok = true;
         return value.toBool();
     } else if (value.isString()) {
-        if (value.toString() == QLatin1String("true")) {
+        if (value.toString() == True) {
             ok = true;
             return true;
-        } else if (value.toString() == QLatin1String("false")) {
+        } else if (value.toString() == False) {
             ok = true;
             return false;
         }

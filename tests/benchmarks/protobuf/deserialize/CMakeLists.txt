@@ -16,3 +16,5 @@ qt6_add_protobuf(tst_bench_deserialize_protobuf
         data/bench.proto
     OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/qt_protobuf_generated"
 )
+
+set_target_properties(tst_bench_deserialize_protobuf PROPERTIES QT_USE_PROTOBUF_LIST_ALIASES FALSE)

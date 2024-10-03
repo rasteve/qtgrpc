@@ -31,10 +31,9 @@ public:
     static const char *MetaTypeRegistrationMessageDefinition();
     static const char *MetaTypeRegistrationGlobalEnumDefinition();
     static const char *MetaTypeRegistrationGlobalEnumTemplate();
-    static const char *UsingMessageTemplate();
+    static const char *UsingListTemplate();
     static const char *UsingMapTemplate();
     static const char *UsingNestedMessageTemplate();
-    static const char *UsingRepeatedEnumTemplate();
     static const char *UsingEnumTemplate();
     static const char *NamespaceTemplate();
     static const char *NamespaceClosingTemplate();
@@ -167,7 +166,6 @@ public:
 
     static const char *QDateTimeExtrasTemplate();
 
-    static const char *RepeatedSuffix();
     static const char *ProtoFileSuffix();
     static const char *HeaderSuffix();
     static const char *EnumClassSuffix();

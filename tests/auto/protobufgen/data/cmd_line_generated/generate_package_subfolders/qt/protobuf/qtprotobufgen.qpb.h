@@ -29,74 +29,73 @@ enum class GlobalEnum : int32_t {
 };
 Q_ENUM_NS(GlobalEnum)
 
-using GlobalEnumRepeated = QList<GlobalEnum>;
 void registerTypes();
 } // namespace GlobalEnumGadget
 class EnumTypes;
-using EnumTypesRepeated = QList<EnumTypes>;
 namespace EnumTypes_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 enum class NestedEnum : int32_t;
-using NestedEnumRepeated = QList<NestedEnum>;
 enum class FieldOneOfFields;
 } // namespace EnumTypes_QtProtobufNested
 
 class ScalarTypes;
-using ScalarTypesRepeated = QList<ScalarTypes>;
 namespace ScalarTypes_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 } // namespace ScalarTypes_QtProtobufNested
 
 class ScalarRepeatedTypes;
-using ScalarRepeatedTypesRepeated = QList<ScalarRepeatedTypes>;
 namespace ScalarRepeatedTypes_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 } // namespace ScalarRepeatedTypes_QtProtobufNested
 
 class ScalarRepeatedNoPackedTypes;
-using ScalarRepeatedNoPackedTypesRepeated = QList<ScalarRepeatedNoPackedTypes>;
 namespace ScalarRepeatedNoPackedTypes_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 } // namespace ScalarRepeatedNoPackedTypes_QtProtobufNested
 
 class ScalarOneOfTypes;
-using ScalarOneOfTypesRepeated = QList<ScalarOneOfTypes>;
 namespace ScalarOneOfTypes_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 enum class FieldOneOfFields;
 } // namespace ScalarOneOfTypes_QtProtobufNested
 
 class ScalarOptionalTypes;
-using ScalarOptionalTypesRepeated = QList<ScalarOptionalTypes>;
 namespace ScalarOptionalTypes_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 } // namespace ScalarOptionalTypes_QtProtobufNested
 
 class MapScalarTypes;
-using MapScalarTypesRepeated = QList<MapScalarTypes>;
 namespace MapScalarTypes_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 } // namespace MapScalarTypes_QtProtobufNested
 
 class MessageTypes;
-using MessageTypesRepeated = QList<MessageTypes>;
 namespace MessageTypes_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 enum class FieldOneOfFields;
 } // namespace MessageTypes_QtProtobufNested
 
 class MessageNestedTypes;
-using MessageNestedTypesRepeated = QList<MessageNestedTypes>;
 namespace MessageNestedTypes_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 class NestedMessage;
-using NestedMessageRepeated = QList<NestedMessage>;
 namespace NestedMessage_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 } // namespace NestedMessage_QtProtobufNested
 
 } // namespace MessageNestedTypes_QtProtobufNested
 
+#ifdef QT_USE_PROTOBUF_LIST_ALIASES
+using EnumTypesRepeated = QList<EnumTypes>;
+using ScalarTypesRepeated = QList<ScalarTypes>;
+using ScalarRepeatedTypesRepeated = QList<ScalarRepeatedTypes>;
+using ScalarRepeatedNoPackedTypesRepeated = QList<ScalarRepeatedNoPackedTypes>;
+using ScalarOneOfTypesRepeated = QList<ScalarOneOfTypes>;
+using ScalarOptionalTypesRepeated = QList<ScalarOptionalTypes>;
+using MapScalarTypesRepeated = QList<MapScalarTypes>;
+using MessageTypesRepeated = QList<MessageTypes>;
+using MessageNestedTypesRepeated = QList<MessageNestedTypes>;
+#endif // QT_USE_PROTOBUF_LIST_ALIASES
 
 class EnumTypes_QtProtobufData;
 class EnumTypes : public QProtobufMessage
@@ -112,7 +111,6 @@ class EnumTypes : public QProtobufMessage
 public:
     using QtProtobufFieldEnum = EnumTypes_QtProtobufNested::QtProtobufFieldEnum;
     using NestedEnum = EnumTypes_QtProtobufNested::NestedEnum;
-    using NestedEnumRepeated = QList<NestedEnum>;
     using FieldOneOfFields = EnumTypes_QtProtobufNested::FieldOneOfFields;
     EnumTypes();
     ~EnumTypes();
@@ -182,7 +180,6 @@ enum class NestedEnum : int32_t {
 };
 Q_ENUM_NS(NestedEnum)
 
-using NestedEnumRepeated = QList<NestedEnum>;
 enum class FieldOneOfFields : int32_t {
     UninitializedField = QtProtobuf::InvalidFieldNumber,
     Field3 = 3,
@@ -1083,7 +1080,7 @@ class MessageTypes : public QProtobufMessage
     Q_PROTOBUF_OBJECT
     Q_PROPERTY(qt::protobuf::ScalarTypes *field1_p READ field1_p WRITE setField1_p SCRIPTABLE false)
     Q_PROPERTY(bool hasField1 READ hasField1)
-    Q_PROPERTY(qt::protobuf::ScalarTypesRepeated field2Data READ field2 WRITE setField2 SCRIPTABLE true)
+    Q_PROPERTY(QList<qt::protobuf::ScalarTypes> field2Data READ field2 WRITE setField2 SCRIPTABLE true)
     Q_PROPERTY(qt::protobuf::ScalarTypes *field3_p READ field3_p WRITE setField3_p SCRIPTABLE false)
     Q_PROPERTY(bool hasField3 READ hasField3)
     Q_PROPERTY(qt::protobuf::EnumTypes::NestedEnum field4 READ field4 WRITE setField4 SCRIPTABLE true)
@@ -1120,7 +1117,7 @@ public:
     const ScalarTypes &field1() const &;
     void clearField1();
 
-    const ScalarTypesRepeated &field2() const &;
+    const QList<ScalarTypes> &field2() const &;
 
     bool hasField3() const;
     const ScalarTypes &field3() const &;
@@ -1141,8 +1138,8 @@ public:
     FieldOneOfFields fieldOneOfField() const;
     void setField1(const ScalarTypes &field1);
     void setField1(ScalarTypes &&field1);
-    void setField2(const ScalarTypesRepeated &field2);
-    void setField2(ScalarTypesRepeated &&field2);
+    void setField2(const QList<ScalarTypes> &field2);
+    void setField2(QList<ScalarTypes> &&field2);
     void setField3(const ScalarTypes &field3);
     void setField3(ScalarTypes &&field3);
     void setField4(EnumTypes_QtProtobufNested::NestedEnum field4);
@@ -1214,7 +1211,6 @@ class MessageNestedTypes : public QProtobufMessage
 public:
     using QtProtobufFieldEnum = MessageNestedTypes_QtProtobufNested::QtProtobufFieldEnum;
     using NestedMessage = MessageNestedTypes_QtProtobufNested::NestedMessage;
-    using NestedMessageRepeated = MessageNestedTypes_QtProtobufNested::NestedMessageRepeated;
     MessageNestedTypes();
     ~MessageNestedTypes();
     MessageNestedTypes(const MessageNestedTypes &other);

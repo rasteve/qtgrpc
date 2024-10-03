@@ -57,16 +57,17 @@ TestCase {
         rInt64Msg.testRepeatedInt = [0, 65536, -65536, 2]
 
         rDoubleMsg.testRepeatedDouble[4] = -4567.111
-        //TODO: see QTBUG-113690
-        rSIntMsg.testRepeatedInt[3] = 5
-        rSInt64Msg.testRepeatedInt[3] = 5
-        rFixedIntMsg.testRepeatedInt[3] = 5
-        rUIntMsg.testRepeatedInt[3] = 5
-        rUInt64Msg.testRepeatedInt[3] = 5
-        rIntMsg.testRepeatedInt[3] = 5
-        rInt64Msg.testRepeatedInt[3] = 5
         rFloatMsg.testRepeatedFloat[4] = -4567.11083984375
         rBoolMsg.testRepeatedBool[4] = false
+        // Assignment to a exact list element causes assert in qmlcachgen.
+        // To be investigated. Skip assginment by now. See QTBUG-131930.
+        // rSIntMsg.testRepeatedInt[3] = 5
+        // rSInt64Msg.testRepeatedInt[3] = 5
+        // rFixedIntMsg.testRepeatedInt[3] = 5
+        // rUIntMsg.testRepeatedInt[3] = 5
+        // rUInt64Msg.testRepeatedInt[3] = 5
+        // rIntMsg.testRepeatedInt[3] = 5
+        // rInt64Msg.testRepeatedInt[3] = 5
     }
 
     function test_repeatedTypes_data() {

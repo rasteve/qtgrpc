@@ -21,11 +21,13 @@
 
 namespace qtgrpc::tests {
 class IntMessage;
-using IntMessageRepeated = QList<IntMessage>;
 namespace IntMessage_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 } // namespace IntMessage_QtProtobufNested
 
+#ifdef QT_USE_PROTOBUF_LIST_ALIASES
+using IntMessageRepeated = QList<IntMessage>;
+#endif // QT_USE_PROTOBUF_LIST_ALIASES
 
 class IntMessage_QtProtobufData;
 class IntMessage : public QProtobufMessage

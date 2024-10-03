@@ -62,7 +62,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering Empty::staticPropertyOrdering
 void Empty::registerTypes()
 {
     qRegisterMetaType<Empty>();
-    qRegisterMetaType<EmptyRepeated>();
+    qRegisterMetaType<QList<Empty>>();
 }
 
 Empty::Empty()

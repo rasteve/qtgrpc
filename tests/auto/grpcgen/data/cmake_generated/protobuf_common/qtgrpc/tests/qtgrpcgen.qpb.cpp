@@ -69,7 +69,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering IntMessage::staticPropertyOrd
 void IntMessage::registerTypes()
 {
     qRegisterMetaType<IntMessage>();
-    qRegisterMetaType<IntMessageRepeated>();
+    qRegisterMetaType<QList<IntMessage>>();
 }
 
 IntMessage::IntMessage()

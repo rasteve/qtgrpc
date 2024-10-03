@@ -222,6 +222,13 @@ void QProtobufGenerator::GenerateHeader(const FileDescriptor *file,
         messageDecl.printClassForwardDeclaration();
     });
 
+    headerPrinter->Print("#ifdef QT_USE_PROTOBUF_LIST_ALIASES\n");
+    common::iterateMessages(file, [&headerPrinter](const Descriptor *message) {
+        headerPrinter->Print(common::produceMessageTypeMap(message, nullptr),
+                             CommonTemplates::UsingListTemplate());
+    });
+    headerPrinter->Print("#endif // QT_USE_PROTOBUF_LIST_ALIASES\n");
+
     common::iterateMessages(
                 file,
                 [&headerPrinter](const Descriptor *message) {

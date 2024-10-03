@@ -14,11 +14,13 @@
 
 namespace qt::protobuf {
 class Empty;
-using EmptyRepeated = QList<Empty>;
 namespace Empty_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 } // namespace Empty_QtProtobufNested
 
+#ifdef QT_USE_PROTOBUF_LIST_ALIASES
+using EmptyRepeated = QList<Empty>;
+#endif // QT_USE_PROTOBUF_LIST_ALIASES
 
 class Empty_QtProtobufData;
 class Empty : public QProtobufMessage

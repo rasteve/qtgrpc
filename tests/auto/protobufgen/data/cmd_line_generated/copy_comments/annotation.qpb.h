@@ -16,59 +16,61 @@
 
 namespace qtprotobufnamespace::tests {
 class AnnotatedMessage1;
-using AnnotatedMessage1Repeated = QList<AnnotatedMessage1>;
 namespace AnnotatedMessage1_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 } // namespace AnnotatedMessage1_QtProtobufNested
 
 class AnnotatedMessage2;
-using AnnotatedMessage2Repeated = QList<AnnotatedMessage2>;
 namespace AnnotatedMessage2_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 } // namespace AnnotatedMessage2_QtProtobufNested
 
 class AnnotatedMessage3;
-using AnnotatedMessage3Repeated = QList<AnnotatedMessage3>;
 namespace AnnotatedMessage3_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 } // namespace AnnotatedMessage3_QtProtobufNested
 
 class AnnotatedMessage4;
-using AnnotatedMessage4Repeated = QList<AnnotatedMessage4>;
 namespace AnnotatedMessage4_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 } // namespace AnnotatedMessage4_QtProtobufNested
 
 class AnnotatedMessage5;
-using AnnotatedMessage5Repeated = QList<AnnotatedMessage5>;
 namespace AnnotatedMessage5_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 } // namespace AnnotatedMessage5_QtProtobufNested
 
 class AnnotatedMessage6;
-using AnnotatedMessage6Repeated = QList<AnnotatedMessage6>;
 namespace AnnotatedMessage6_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 } // namespace AnnotatedMessage6_QtProtobufNested
 
 class AnnotatedMessage7;
-using AnnotatedMessage7Repeated = QList<AnnotatedMessage7>;
 namespace AnnotatedMessage7_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 } // namespace AnnotatedMessage7_QtProtobufNested
 
 class AnnotatedMessage8;
-using AnnotatedMessage8Repeated = QList<AnnotatedMessage8>;
 namespace AnnotatedMessage8_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 } // namespace AnnotatedMessage8_QtProtobufNested
 
 class AnnotatedMessage9;
-using AnnotatedMessage9Repeated = QList<AnnotatedMessage9>;
 namespace AnnotatedMessage9_QtProtobufNested {
 enum class QtProtobufFieldEnum;
 } // namespace AnnotatedMessage9_QtProtobufNested
 
+#ifdef QT_USE_PROTOBUF_LIST_ALIASES
+using AnnotatedMessage1Repeated = QList<AnnotatedMessage1>;
+using AnnotatedMessage2Repeated = QList<AnnotatedMessage2>;
+using AnnotatedMessage3Repeated = QList<AnnotatedMessage3>;
+using AnnotatedMessage4Repeated = QList<AnnotatedMessage4>;
+using AnnotatedMessage5Repeated = QList<AnnotatedMessage5>;
+using AnnotatedMessage6Repeated = QList<AnnotatedMessage6>;
+using AnnotatedMessage7Repeated = QList<AnnotatedMessage7>;
+using AnnotatedMessage8Repeated = QList<AnnotatedMessage8>;
+using AnnotatedMessage9Repeated = QList<AnnotatedMessage9>;
+#endif // QT_USE_PROTOBUF_LIST_ALIASES
 
 /* test annotation */
 class AnnotatedMessage1_QtProtobufData;

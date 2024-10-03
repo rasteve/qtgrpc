@@ -31,7 +31,6 @@ MessageDeclarationPrinter::~MessageDeclarationPrinter() = default;
 void MessageDeclarationPrinter::printClassForwardDeclarationPrivate()
 {
     m_printer->Print(m_typeMap, CommonTemplates::ClassMessageForwardDeclarationTemplate());
-    m_printer->Print(m_typeMap, CommonTemplates::UsingMessageTemplate());
 
     if (common::hasNestedTypes(m_descriptor)) {
         auto scopeNamespaces = common::getNestedScopeNamespace(m_typeMap["classname"]);
@@ -166,7 +165,6 @@ void MessageDeclarationPrinter::printNested()
         const auto *enumDescr = m_descriptor->enum_type(i);
         auto typeMap = common::produceEnumTypeMap(enumDescr, m_descriptor);
         m_printer->Print(typeMap, CommonTemplates::UsingEnumTemplate());
-        m_printer->Print(typeMap, CommonTemplates::UsingRepeatedEnumTemplate());
     }
 
     common::iterateOneofFields(m_descriptor, [this](const OneofDescriptor *, PropertyMap typeMap) {
@@ -451,7 +449,6 @@ void MessageDeclarationPrinter::printQEnums()
         Outdent();
         m_printer->Print(CommonTemplates::SemicolonBlockEnclosureTemplate());
         m_printer->Print(typeMap, CommonTemplates::QEnumNSTemplate());
-        m_printer->Print(typeMap, CommonTemplates::UsingRepeatedEnumTemplate());
     }
 }
 

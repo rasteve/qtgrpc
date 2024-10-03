@@ -131,7 +131,7 @@ const char *CommonTemplates::MetaTypeRegistrationGlobalEnumTemplate()
     return "qRegisterMetaType<$type$>();\n"
            "qRegisterMetaType<$full_type$>();\n";
 }
-const char *CommonTemplates::UsingMessageTemplate()
+const char *CommonTemplates::UsingListTemplate()
 {
     return "using $classname$Repeated = QList<$classname$>;\n";
 }
@@ -141,16 +141,11 @@ const char *CommonTemplates::UsingMapTemplate()
 }
 const char *CommonTemplates::UsingNestedMessageTemplate()
 {
-    return "using $type$ = $scope_namespaces$::$type$;\n"
-           "using $list_type$ = $scope_namespaces$::$list_type$;\n";
+    return "using $type$ = $scope_namespaces$::$type$;\n";
 }
 const char *CommonTemplates::UsingEnumTemplate()
 {
     return "using $type$ = $scope_namespaces$::$type$;\n";
-}
-const char *CommonTemplates::UsingRepeatedEnumTemplate()
-{
-    return "using $list_type$ = QList<$type$>;\n";
 }
 
 const char *CommonTemplates::NamespaceTemplate()
@@ -180,8 +175,7 @@ const char *CommonTemplates::ClassMessageForwardDeclarationTemplate()
 
 const char *CommonTemplates::EnumForwardDeclarationTemplate()
 {
-    return "enum class $type$ : int32_t;\n"
-           "using $list_type$ = QList<$type$>;\n";
+    return "enum class $type$ : int32_t;\n";
 }
 
 const char *CommonTemplates::EnumClassForwardDeclarationTemplate()
@@ -961,11 +955,6 @@ const char *CommonTemplates::QDateTimeExtrasTemplate()
 {
     return "$export_macro$static Timestamp fromDateTime(const QDateTime &dateTime);\n"
            "$export_macro$QDateTime toDateTime() const;\n";
-}
-
-const char *CommonTemplates::RepeatedSuffix()
-{
-    return "Repeated";
 }
 
 // Those marked "Limited" have limited usage in QML, since QML only supports signed integers.

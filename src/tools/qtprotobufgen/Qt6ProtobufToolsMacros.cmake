@@ -531,10 +531,22 @@ function(qt6_add_protobuf target)
 
     target_sources(${target} PRIVATE ${cpp_sources} ${qml_sources})
 
+    get_property(is_use_protobuf_list_aliases_set TARGET ${target}
+        PROPERTY QT_USE_PROTOBUF_LIST_ALIASES SET)
+    if(NOT is_use_protobuf_list_aliases_set)
+        set_target_properties(${target}
+            PROPERTIES
+                QT_USE_PROTOBUF_LIST_ALIASES TRUE
+        )
+    endif()
+
     set_target_properties(${target}
         PROPERTIES
             AUTOMOC ON
     )
+
+    target_compile_definitions(${target} PUBLIC
+        $<$<BOOL:$<TARGET_PROPERTY:QT_USE_PROTOBUF_LIST_ALIASES>>:QT_USE_PROTOBUF_LIST_ALIASES>)
 
     if(WIN32)
         if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")

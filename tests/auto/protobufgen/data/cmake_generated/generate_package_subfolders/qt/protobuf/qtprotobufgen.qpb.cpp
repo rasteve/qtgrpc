@@ -94,10 +94,10 @@ const QtProtobufPrivate::QProtobufPropertyOrdering EnumTypes::staticPropertyOrde
 void EnumTypes::registerTypes()
 {
     qRegisterMetaType<EnumTypes>();
-    qRegisterMetaType<EnumTypesRepeated>();
+    qRegisterMetaType<QList<EnumTypes>>();
     qRegisterProtobufEnumType<EnumTypes_QtProtobufNested::NestedEnum>();
     qRegisterMetaType<NestedEnum>();
-    qRegisterMetaType<NestedEnumRepeated>();
+    qRegisterMetaType<QList<NestedEnum>>();
 }
 
 EnumTypes::EnumTypes()
@@ -380,7 +380,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering ScalarTypes::staticPropertyOr
 void ScalarTypes::registerTypes()
 {
     qRegisterMetaType<ScalarTypes>();
-    qRegisterMetaType<ScalarTypesRepeated>();
+    qRegisterMetaType<QList<ScalarTypes>>();
 }
 
 ScalarTypes::ScalarTypes()
@@ -763,7 +763,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering ScalarRepeatedTypes::staticPr
 void ScalarRepeatedTypes::registerTypes()
 {
     qRegisterMetaType<ScalarRepeatedTypes>();
-    qRegisterMetaType<ScalarRepeatedTypesRepeated>();
+    qRegisterMetaType<QList<ScalarRepeatedTypes>>();
 }
 
 ScalarRepeatedTypes::ScalarRepeatedTypes()
@@ -1240,7 +1240,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering ScalarRepeatedNoPackedTypes::
 void ScalarRepeatedNoPackedTypes::registerTypes()
 {
     qRegisterMetaType<ScalarRepeatedNoPackedTypes>();
-    qRegisterMetaType<ScalarRepeatedNoPackedTypesRepeated>();
+    qRegisterMetaType<QList<ScalarRepeatedNoPackedTypes>>();
 }
 
 ScalarRepeatedNoPackedTypes::ScalarRepeatedNoPackedTypes()
@@ -1691,7 +1691,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering ScalarOneOfTypes::staticPrope
 void ScalarOneOfTypes::registerTypes()
 {
     qRegisterMetaType<ScalarOneOfTypes>();
-    qRegisterMetaType<ScalarOneOfTypesRepeated>();
+    qRegisterMetaType<QList<ScalarOneOfTypes>>();
 }
 
 ScalarOneOfTypes::ScalarOneOfTypes()
@@ -2336,7 +2336,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering ScalarOptionalTypes::staticPr
 void ScalarOptionalTypes::registerTypes()
 {
     qRegisterMetaType<ScalarOptionalTypes>();
-    qRegisterMetaType<ScalarOptionalTypesRepeated>();
+    qRegisterMetaType<QList<ScalarOptionalTypes>>();
 }
 
 ScalarOptionalTypes::ScalarOptionalTypes()
@@ -3063,7 +3063,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering MapScalarTypes::staticPropert
 void MapScalarTypes::registerTypes()
 {
     qRegisterMetaType<MapScalarTypes>();
-    qRegisterMetaType<MapScalarTypesRepeated>();
+    qRegisterMetaType<QList<MapScalarTypes>>();
     qRegisterMetaType<MapScalarTypes::Field1Entry>();
     qRegisterProtobufMapType<QtProtobuf::int32, QtProtobuf::int64>();
     qRegisterMetaType<MapScalarTypes::Field2Entry>();
@@ -3384,7 +3384,7 @@ public:
     }
 
     QtProtobufPrivate::QProtobufLazyMessagePointer<ScalarTypes> m_field1;
-    ScalarTypesRepeated m_field2;
+    QList<ScalarTypes> m_field2;
     QtProtobufPrivate::QProtobufLazyMessagePointer<ScalarTypes> m_field3;
     EnumTypes_QtProtobufNested::NestedEnum m_field4;
     MessageTypes::Field5Entry m_field5;
@@ -3462,7 +3462,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering MessageTypes::staticPropertyO
 void MessageTypes::registerTypes()
 {
     qRegisterMetaType<MessageTypes>();
-    qRegisterMetaType<MessageTypesRepeated>();
+    qRegisterMetaType<QList<MessageTypes>>();
     qRegisterMetaType<MessageTypes::Field5Entry>();
     qRegisterProtobufMapType<QtProtobuf::int32, ScalarTypes>();
 }
@@ -3526,7 +3526,7 @@ void MessageTypes::clearField1()
     }
 }
 
-const ScalarTypesRepeated &MessageTypes::field2() const &
+const QList<ScalarTypes> &MessageTypes::field2() const &
 {
     return dptr->m_field2;
 }
@@ -3641,7 +3641,7 @@ void MessageTypes::setField1(ScalarTypes &&field1)
     }
 }
 
-void MessageTypes::setField2(const ScalarTypesRepeated &field2)
+void MessageTypes::setField2(const QList<ScalarTypes> &field2)
 {
     if (dptr->m_field2 != field2) {
         dptr.detach();
@@ -3649,7 +3649,7 @@ void MessageTypes::setField2(const ScalarTypesRepeated &field2)
     }
 }
 
-void MessageTypes::setField2(ScalarTypesRepeated &&field2)
+void MessageTypes::setField2(QList<ScalarTypes> &&field2)
 {
     if (dptr->m_field2 != field2) {
         dptr.detach();
@@ -3862,7 +3862,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering NestedMessage::staticProperty
 void NestedMessage::registerTypes()
 {
     qRegisterMetaType<NestedMessage>();
-    qRegisterMetaType<NestedMessageRepeated>();
+    qRegisterMetaType<QList<NestedMessage>>();
 }
 
 NestedMessage::NestedMessage()
@@ -4020,7 +4020,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering MessageNestedTypes::staticPro
 void MessageNestedTypes::registerTypes()
 {
     qRegisterMetaType<MessageNestedTypes>();
-    qRegisterMetaType<MessageNestedTypesRepeated>();
+    qRegisterMetaType<QList<MessageNestedTypes>>();
 }
 
 MessageNestedTypes::MessageNestedTypes()

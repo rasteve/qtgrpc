@@ -69,7 +69,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering AnnotatedMessage1::staticProp
 void AnnotatedMessage1::registerTypes()
 {
     qRegisterMetaType<AnnotatedMessage1>();
-    qRegisterMetaType<AnnotatedMessage1Repeated>();
+    qRegisterMetaType<QList<AnnotatedMessage1>>();
 }
 
 AnnotatedMessage1::AnnotatedMessage1()
@@ -173,7 +173,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering AnnotatedMessage2::staticProp
 void AnnotatedMessage2::registerTypes()
 {
     qRegisterMetaType<AnnotatedMessage2>();
-    qRegisterMetaType<AnnotatedMessage2Repeated>();
+    qRegisterMetaType<QList<AnnotatedMessage2>>();
 }
 
 AnnotatedMessage2::AnnotatedMessage2()
@@ -277,7 +277,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering AnnotatedMessage3::staticProp
 void AnnotatedMessage3::registerTypes()
 {
     qRegisterMetaType<AnnotatedMessage3>();
-    qRegisterMetaType<AnnotatedMessage3Repeated>();
+    qRegisterMetaType<QList<AnnotatedMessage3>>();
 }
 
 AnnotatedMessage3::AnnotatedMessage3()
@@ -381,7 +381,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering AnnotatedMessage4::staticProp
 void AnnotatedMessage4::registerTypes()
 {
     qRegisterMetaType<AnnotatedMessage4>();
-    qRegisterMetaType<AnnotatedMessage4Repeated>();
+    qRegisterMetaType<QList<AnnotatedMessage4>>();
 }
 
 AnnotatedMessage4::AnnotatedMessage4()
@@ -485,7 +485,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering AnnotatedMessage5::staticProp
 void AnnotatedMessage5::registerTypes()
 {
     qRegisterMetaType<AnnotatedMessage5>();
-    qRegisterMetaType<AnnotatedMessage5Repeated>();
+    qRegisterMetaType<QList<AnnotatedMessage5>>();
 }
 
 AnnotatedMessage5::AnnotatedMessage5()
@@ -589,7 +589,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering AnnotatedMessage6::staticProp
 void AnnotatedMessage6::registerTypes()
 {
     qRegisterMetaType<AnnotatedMessage6>();
-    qRegisterMetaType<AnnotatedMessage6Repeated>();
+    qRegisterMetaType<QList<AnnotatedMessage6>>();
 }
 
 AnnotatedMessage6::AnnotatedMessage6()
@@ -693,7 +693,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering AnnotatedMessage7::staticProp
 void AnnotatedMessage7::registerTypes()
 {
     qRegisterMetaType<AnnotatedMessage7>();
-    qRegisterMetaType<AnnotatedMessage7Repeated>();
+    qRegisterMetaType<QList<AnnotatedMessage7>>();
 }
 
 AnnotatedMessage7::AnnotatedMessage7()
@@ -797,7 +797,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering AnnotatedMessage8::staticProp
 void AnnotatedMessage8::registerTypes()
 {
     qRegisterMetaType<AnnotatedMessage8>();
-    qRegisterMetaType<AnnotatedMessage8Repeated>();
+    qRegisterMetaType<QList<AnnotatedMessage8>>();
 }
 
 AnnotatedMessage8::AnnotatedMessage8()
@@ -901,7 +901,7 @@ const QtProtobufPrivate::QProtobufPropertyOrdering AnnotatedMessage9::staticProp
 void AnnotatedMessage9::registerTypes()
 {
     qRegisterMetaType<AnnotatedMessage9>();
-    qRegisterMetaType<AnnotatedMessage9Repeated>();
+    qRegisterMetaType<QList<AnnotatedMessage9>>();
 }
 
 AnnotatedMessage9::AnnotatedMessage9()

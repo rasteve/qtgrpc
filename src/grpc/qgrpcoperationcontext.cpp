@@ -21,7 +21,7 @@ QT_BEGIN_NAMESPACE
     \inmodule QtGrpc
     \since 6.7
     \brief The QGrpcOperationContext class provides context for communication
-    between an individual gRPC operation and a channel.
+    between an individual \gRPC operation and a channel.
 
     QGrpcOperationContext is constructed internally when a remote procedure call
     (RPC) is requested, mediating interaction between the client's operation

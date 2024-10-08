@@ -80,6 +80,8 @@ manifestmeta.highlighted.names = "QtProtobuf/Sensors"
 
 tagfile                 = qtprotobuf.tags
 
+macro.gRPC = "\\tm gRPC"
+
 # Enforce zero documentation warnings
 warninglimit = 0
 warninglimit.enabled = true

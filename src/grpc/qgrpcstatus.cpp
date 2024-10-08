@@ -19,7 +19,7 @@ QT_BEGIN_NAMESPACE
 
     \brief This class combines a \l QtGrpc::StatusCode and a string message.
 
-    The QGrpcStatus class contains information about the last gRPC operation
+    The QGrpcStatus class contains information about the last \gRPC operation
     returned from the respective channel, or other functions in the QtGrpc
     library.
 
@@ -29,12 +29,12 @@ QT_BEGIN_NAMESPACE
 
 /*!
     \property QGrpcStatus::code
-    \brief \l {QtGrpc::} {StatusCode} received for prior gRPC call.
+    \brief \l {QtGrpc::} {StatusCode} received for prior \gRPC call.
 */
 
 /*!
     \property QGrpcStatus::message
-    \brief Status message received for prior gRPC call.
+    \brief Status message received for prior \gRPC call.
 */
 
 /*!

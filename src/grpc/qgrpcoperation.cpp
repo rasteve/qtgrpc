@@ -24,7 +24,7 @@ QGrpcOperationPrivate::~QGrpcOperationPrivate()
     \class QGrpcOperation
     \inmodule QtGrpc
     \brief The QGrpcOperation class implements common logic to
-           handle the gRPC communication from the client side.
+           handle the \gRPC communication from the client side.
 */
 
 /*!

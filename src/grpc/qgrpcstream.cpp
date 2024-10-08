@@ -13,7 +13,7 @@ QT_BEGIN_NAMESPACE
     \since 6.7
 
     \brief The QGrpcServerStream class provides the interface to access the
-    server-side gRPC stream functionality from gRPC client side.
+    server-side \gRPC stream functionality from \gRPC client side.
 
     The QGrpcServerStream object is owned by the client object that created it.
 */
@@ -48,7 +48,7 @@ bool QGrpcServerStream::event(QEvent *event)
     \since 6.7
 
     \brief The QGrpcClientStream class provides the interface to access the
-    client-side gRPC stream functionality from gRPC client side.
+    client-side \gRPC stream functionality from \gRPC client side.
 */
 
 QGrpcClientStream::QGrpcClientStream(std::shared_ptr<QGrpcOperationContext> operationContext,
@@ -92,7 +92,7 @@ bool QGrpcClientStream::event(QEvent *event)
     \since 6.7
 
     \brief The QGrpcBidiStream class provides the interface to access the
-    bidirectional gRPC stream functionality from gRPC client side.
+    bidirectional \gRPC stream functionality from \gRPC client side.
 */
 
 /*!

@@ -16,8 +16,8 @@ using namespace Qt::StringLiterals;
     \class QGrpcCallReply
     \inmodule QtGrpc
 
-    \brief The QGrpcCallReply class implements logic to handle gRPC calls
-    from the gRPC client side.
+    \brief The QGrpcCallReply class implements logic to handle \gRPC calls
+    from the \gRPC client side.
 
     The QGrpcCallReply object is owned by the client object that created it.
 */

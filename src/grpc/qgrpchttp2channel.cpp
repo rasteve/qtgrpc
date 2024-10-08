@@ -58,7 +58,7 @@ using namespace QtGrpc;
     application-specific HTTP/2 headers, and connection timeouts.
 
     \l QGrpcCallOptions control channel parameters for the
-    specific unary call or gRPC stream.
+    specific unary call or \gRPC stream.
 
     QGrpcHttp2Channel uses QGrpcChannelOptions to select the serialization
     format for the protobuf messages. The serialization format can be set
@@ -870,7 +870,7 @@ QUrl QGrpcHttp2Channel::hostUri() const
 
 /*!
     \internal
-    Implementation of unary gRPC call based on \l QNetworkAccessManager.
+    Implementation of unary \gRPC call based on \l QNetworkAccessManager.
 */
 void QGrpcHttp2Channel::call(std::shared_ptr<QGrpcOperationContext> operationContext)
 {
@@ -879,7 +879,7 @@ void QGrpcHttp2Channel::call(std::shared_ptr<QGrpcOperationContext> operationCon
 
 /*!
     \internal
-    Implementation of server-side gRPC stream based on \l QNetworkAccessManager.
+    Implementation of server-side \gRPC stream based on \l QNetworkAccessManager.
 */
 void QGrpcHttp2Channel::serverStream(std::shared_ptr<QGrpcOperationContext> operationContext)
 {
@@ -888,7 +888,7 @@ void QGrpcHttp2Channel::serverStream(std::shared_ptr<QGrpcOperationContext> oper
 
 /*!
     \internal
-    Implementation of client-side gRPC stream based on \l QNetworkAccessManager.
+    Implementation of client-side \gRPC stream based on \l QNetworkAccessManager.
 */
 void QGrpcHttp2Channel::clientStream(std::shared_ptr<QGrpcOperationContext> operationContext)
 {
@@ -897,7 +897,7 @@ void QGrpcHttp2Channel::clientStream(std::shared_ptr<QGrpcOperationContext> oper
 
 /*!
     \internal
-    Implementation of bidirectional gRPC stream based on \l QNetworkAccessManager.
+    Implementation of bidirectional \gRPC stream based on \l QNetworkAccessManager.
 */
 void QGrpcHttp2Channel::bidiStream(std::shared_ptr<QGrpcOperationContext> operationContext)
 {

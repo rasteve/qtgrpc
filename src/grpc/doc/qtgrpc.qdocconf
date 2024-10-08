@@ -58,6 +58,8 @@ manifestmeta.highlighted.names = "QtGrpc/Magic 8 Ball"
 
 tagfile                 = qtgrpc.tags
 
+macro.gRPC = "\\tm gRPC"
+
 # Enforce zero documentation warnings
 warninglimit = 0
 warninglimit.enabled = true

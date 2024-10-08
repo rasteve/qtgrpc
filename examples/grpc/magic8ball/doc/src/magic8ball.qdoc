@@ -8,23 +8,23 @@
     \meta tag {network,protobuf,grpc}
     \title Magic 8 Ball
 
-    \brief Creating a HTTP2 connection between a Qt gRPC client and a C++ gRPC server.
+    \brief Creating a HTTP2 connection between a Qt \gRPC client and a C++ \gRPC server.
 
     Magic 8 ball sends a question to a server and displays the received answer:
     \image magic8ballScreenshot.webp "Magic 8 ball example screenshot"
 
     The example code includes the following components:
     \list
-    \li \c magic8ball Qt gRPC client application that uses
+    \li \c magic8ball Qt \gRPC client application that uses
         the \l {qt_add_protobuf}{qt_add_protobuf()} and
         \l {qt_add_grpc}{qt_add_grpc()}
         CMake functions for message and service Qt code generation.
-    \li \c server application that calls C++ gRPC plugin
+    \li \c server application that calls C++ \gRPC plugin
         for generating server code and implementing simple server
         logic.
     \endlist
 
-    \note you need the C++ gRPC plugin installed.
+    \note you need the C++ \gRPC plugin installed.
     Find details here: \l {Module prerequisites}
 
     Both components use generated messages from the protobuf schema described in the
@@ -33,11 +33,11 @@
     \skipto syntax = "proto3";
     \printuntil
 
-    The gRPC client is defined as a QML object \b{which is available after the code is compiled}.
+    The \gRPC client is defined as a QML object \b{which is available after the code is compiled}.
     \snippet magic8ball/Main.qml exampleServiceClient
 
     The client service connects to the \c localhost with port \c {50051}, which is specified in the
-    gRPC channel options:
+    \gRPC channel options:
     \snippet magic8ball/Main.qml channelOptions
 
     And sends a request to the server part:
@@ -46,7 +46,7 @@
     \dots 8
     \snippet magic8ball/Main.qml requestAnswerFunctionBody
 
-    \c answerMethod is a gRPC method that the client calls. It has four parameters: the request
+    \c answerMethod is a \gRPC method that the client calls. It has four parameters: the request
     object, a finish callback function, an error callback function and a
     \l {GrpcCallOptions} object.
 

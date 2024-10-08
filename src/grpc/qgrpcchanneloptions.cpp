@@ -21,7 +21,7 @@ using namespace QtGrpc;
     \brief The QGrpcChannelOptions is an storage class used to set additional channel options.
 
     QGrpcChannelOptions provides a set of functions to set and access the channel and default call
-    options that are used by gRPC channels to communicate with the services.
+    options that are used by \gRPC channels to communicate with the services.
 */
 
 class QGrpcChannelOptionsPrivate : public QSharedData

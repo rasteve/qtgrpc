@@ -18,7 +18,7 @@ using namespace Qt::StringLiterals;
     \since 6.6
 
     QGrpcCallOptions provides a set of functions to access the call options
-    that are used by gRPC channels to communicate with the services.
+    that are used by \gRPC channels to communicate with the services.
 */
 
 class QGrpcCallOptionsPrivate : public QSharedData

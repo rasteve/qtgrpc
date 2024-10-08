@@ -18,9 +18,9 @@ QT_BEGIN_NAMESPACE
     \class QAbstractGrpcChannel
     \inmodule QtGrpc
     \brief The QAbstractGrpcChannel class is an interface that represents common
-    gRPC channel functionality.
+    \gRPC channel functionality.
 
-    Implement this interface to create your own custom channel for gRPC
+    Implement this interface to create your own custom channel for \gRPC
     transportation. We provide the QGrpcHttp2Channel, which is a fully featured
     implementation of the QAbstractGrpcChannel for HTTP/2 communication.
 */
@@ -40,7 +40,7 @@ QT_BEGIN_NAMESPACE
     \since 6.7
 
     This pure virtual function is called by public QAbstractGrpcChannel::call
-    method when making unary gRPC call. The \a operationContext is the
+    method when making unary \gRPC call. The \a operationContext is the
     pointer to a channel side \l QGrpcOperationContext primitive that is
     connected with \l QGrpcCallReply primitive, that is used in
     \l QGrpcClientBase implementations.
@@ -148,7 +148,7 @@ void QAbstractGrpcChannel::setChannelOptions(QGrpcChannelOptions &&options)
 /*!
     \internal
     Function constructs \l QGrpcCallReply and \l QGrpcOperationContext
-    primitives and makes the required for unary gRPC call connections
+    primitives and makes the required for unary \gRPC call connections
     between them.
 
     The function should not be called directly, but only by
@@ -180,7 +180,7 @@ std::unique_ptr<QGrpcCallReply> QAbstractGrpcChannel::call(QLatin1StringView met
 /*!
     \internal
     Function constructs \l QGrpcServerStream and \l QGrpcOperationContext
-    primitives and makes the required for server-side gRPC stream connections
+    primitives and makes the required for server-side \gRPC stream connections
     between them.
 
     The function should not be called directly, but only by
@@ -211,7 +211,7 @@ QAbstractGrpcChannel::serverStream(QLatin1StringView method, QLatin1StringView s
 /*!
     \internal
     Function constructs \l QGrpcClientStream and \l QGrpcOperationContext
-    primitives and makes the required for client-side gRPC stream connections
+    primitives and makes the required for client-side \gRPC stream connections
     between them.
 
     The function should not be called directly, but only by
@@ -234,7 +234,7 @@ QAbstractGrpcChannel::clientStream(QLatin1StringView method, QLatin1StringView s
 /*!
     \internal
     Function constructs \l QGrpcBidiStream and \l QGrpcOperationContext
-    primitives and makes the required for bidirectional gRPC stream connections
+    primitives and makes the required for bidirectional \gRPC stream connections
     between them.
 
     The function should not be called directly, but only by

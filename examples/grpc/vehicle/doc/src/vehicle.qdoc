@@ -8,21 +8,21 @@
     \meta tag {network,protobuf,grpc,threading}
     \title Vehicle
 
-    \brief Manage two threaded connections between a Qt gRPC client and a C++ gRPC server.
+    \brief Manage two threaded connections between a Qt \gRPC client and a C++ \gRPC server.
 
-    The example simulates a vehicle dashboard that displays data sent by a gRPC server.
+    The example simulates a vehicle dashboard that displays data sent by a \gRPC server.
     \image vehicle.webp "Vehicle example dashboard screenshot"
 
     The example code has the following components:
     \list
-    \li \c vehicle_client Qt gRPC client application that uses the
+    \li \c vehicle_client Qt \gRPC client application that uses the
         \l {qt_add_protobuf}{qt_add_protobuf()} and \l {qt_add_grpc}{qt_add_grpc()} CMake functions
         for message and service Qt code generation.
-    \li \c vehicle_server application that calls C++ gRPC plugin for generating server code and
+    \li \c vehicle_server application that calls C++ \gRPC plugin for generating server code and
         implementing simple server logic.
     \endlist
 
-    \note you need the C++ gRPC plugin installed.
+    \note you need the C++ \gRPC plugin installed.
     Find details here: \l {Module prerequisites}
 
     Both components use generated messages from the protobuf schemas described in the files
@@ -36,7 +36,7 @@
 
     The \c VehicleManager \l {Singletons in QML#Defining singletons in C++} {C++ singleton} uses
     two \l QThread instances to communicate with the server in parallel. The threads have different
-    gRPC connection types. In this example, there are two types:
+    \gRPC connection types. In this example, there are two types:
     \list
         \li Server streaming RPCs
         For example, the speed stream of the vehicle thread. It uses two callback functions:

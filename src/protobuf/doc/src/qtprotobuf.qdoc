@@ -135,11 +135,11 @@
 /*!
     \page qtprotobuf-installation-windows-vcpkg.html
     \title Example of installation for Windows using vcpkg
-    \brief Installing instructions for Protobuf and gRPC on Windows.
+    \brief Installing instructions for Protobuf and \gRPC on Windows.
 
-    You can install \c Protobuf and \c gRPC packages on Windows using
+    You can install \c Protobuf and \c \gRPC packages on Windows using
     \e vcpkg.
-    \note As an alternative solution, you can build \c Protobuf and \c gRPC
+    \note As an alternative solution, you can build \c Protobuf and \c \gRPC
     packages manually. Build instructions can be found for
     \l {https://github.com/protocolbuffers/protobuf/blob/main/cmake/README.md#windows-builds}{Protobuf}
     and \l{https://github.com/grpc/grpc/blob/v1.60.0/BUILDING.md#windows}{gRPC}
@@ -157,7 +157,7 @@
     \endlist
 
     The \c vcpkg is a cross-platform C/C++ package manager.
-    You can use the \c vcpkg for \c Protobuf, \c gRPC and its dependencies
+    You can use the \c vcpkg for \c Protobuf, \c \gRPC and its dependencies
     installation:
     \badcode
         .\vcpkg.exe install protobuf protobuf:x64-windows
@@ -165,7 +165,7 @@
     \endcode
 
     Finally, you can build and execute Qt-based projects with
-    \c Protobuf and \c gRPC support.
+    \c Protobuf and \c \gRPC support.
     For instance, run \l {Magic 8 Ball} from your installed version
     of Qt.
     The example requires both packages to be installed, since \c {Magic 8 Ball}
@@ -178,7 +178,7 @@
         \li Choose MSVC-based building kit from Qt-creator configuration
             settings:
             \image msvc-kit.webp
-        \li Add the paths to the installed \c Protobuf and \c gRPC packages
+        \li Add the paths to the installed \c Protobuf and \c \gRPC packages
             to the \c CMAKE_PREFIX_PATH environment variable inside
             \c {Initial Configuration} settings block:
             \image path-env-variable.webp

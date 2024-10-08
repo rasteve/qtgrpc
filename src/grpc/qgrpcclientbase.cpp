@@ -24,7 +24,7 @@ QT_BEGIN_NAMESPACE
 /*!
     \class QGrpcClientBase
     \inmodule QtGrpc
-    \brief The QGrpcClientBase class is bridge between gRPC clients
+    \brief The QGrpcClientBase class is bridge between \gRPC clients
     and channels.
 
     QGrpcClientBase provides a set of functions for client classes
@@ -188,7 +188,7 @@ QGrpcClientBase::QGrpcClientBase(QLatin1StringView service, QObject *parent)
 QGrpcClientBase::~QGrpcClientBase() = default;
 
 /*!
-    Attaches \a channel to client as transport layer for gRPC.
+    Attaches \a channel to client as transport layer for \gRPC.
 
     Parameters and return values will be serialized to the channel
     in a format it supports.

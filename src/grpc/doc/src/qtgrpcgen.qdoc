@@ -22,11 +22,11 @@ When using CMake as a build tool, it's better to utilize the
 For build systems other than CMake, you can adjust the commands outlined in the
 \l{Running qtgrpcgen manually}.
 
-\note There is no explicit support for building gRPC and Protobuf
+\note There is no explicit support for building \gRPC and Protobuf
 applications using the Qt GRPC module with \e qmake.
 
 \section2 CMake
-The following CMake commands integrate a gRPC service into a Qt project.
+The following CMake commands integrate a \gRPC service into a Qt project.
 
 \target cmake-commands-qtgrpc
 \annotatedlist cmake-commands-qtgrpc

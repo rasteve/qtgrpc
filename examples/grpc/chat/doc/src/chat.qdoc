@@ -30,14 +30,14 @@
 
     The chat client authenticates to the server using \c {user-name} and \c
     {user-password} HTTP headers. These fields are set within the metadata.
-    Each gRPC message includes the user credentials in the message header. The
+    Each \gRPC message includes the user credentials in the message header. The
     metadata is passed to the \l QGrpcHttp2Channel inside \l
     QGrpcChannelOptions once and reused implicitily:
 
     \snippet chat/client/simplechatengine.cpp 0
 
     The chat client starts the communication with the server using a
-    subscription to gRPC server streaming:
+    subscription to \gRPC server streaming:
 
     \snippet chat/client/simplechatengine.cpp 1
 
@@ -69,10 +69,10 @@
 
     \snippet chat/client/simplechatengine.cpp 2
 
-    Then, the gRPC server processes the client messages and broadcasts them to
+    Then, the \gRPC server processes the client messages and broadcasts them to
     all the connected clients through the \c {SimpleChat/messageList} stream.
 
-    \note This example uses the reference gRPC C++ API in the server
+    \note This example uses the reference \gRPC C++ API in the server
     implementation.
 */
 

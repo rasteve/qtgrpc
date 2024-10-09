@@ -16,6 +16,10 @@
     Constructs a new QVariant from this object.
 //! [qvariant-desc]
 
+//! [qhash-desc]
+    Returns the hash value of \a key, using \a seed to seed the calculation.
+//! [qhash-desc]
+
 //! [rpc-lifetime-note]
     \note Users are responsible for managing the unique RPC handlers returned
     by the \c Client interface, ensuring their existence at least until the

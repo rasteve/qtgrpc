@@ -15,3 +15,10 @@
 //! [qvariant-desc]
     Constructs a new QVariant from this object.
 //! [qvariant-desc]
+
+//! [rpc-lifetime-note]
+    \note Users are responsible for managing the unique RPC handlers returned
+    by the \c Client interface, ensuring their existence at least until the
+    \l{QGrpcOperation::} {finished} signal is emitted. After receiving this
+    signal, the handler can be safely reassigned or destroyed.
+//! [rpc-lifetime-note]

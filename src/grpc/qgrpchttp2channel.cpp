@@ -47,57 +47,71 @@ using namespace QtGrpc;
 /*!
     \class QGrpcHttp2Channel
     \inmodule QtGrpc
+    \brief The QGrpcHttp2Channel class provides a HTTP/2 transport layer
+    for \gRPC communication.
 
-    \brief The QGrpcHttp2Channel class is an HTTP/2-based of
-    QAbstractGrpcChannel, based on \l {Qt Network} HTTP/2 implementation.
+    The QGrpcHttp2Channel class implements QAbstractGrpcChannel, enabling \gRPC
+    communication carried over \l{https://datatracker.ietf.org/doc/html/rfc7540}
+    {HTTP/2 framing}.
 
-    Uses \l QGrpcChannelOptions and \l QGrpcCallOptions
-    to control the HTTP/2 communication with the server.
+    HTTP/2 introduces several advantages over its predecessor, HTTP/1.1, making
+    QGrpcHttp2Channel well-suited for high-performance, real-time applications
+    that require efficient communication, without sacrificing security or
+    reliability, by using multiplexed TCP connections.
 
-    Use \l QGrpcChannelOptions to set the SSL configuration,
-    application-specific HTTP/2 headers, and connection timeouts.
+    The channel can be customized with \l{Secure Sockets Layer (SSL)
+    Classes}{SSL} support, a custom \l{QGrpcChannelOptions::}
+    {serializationFormat}, or other options by constructing it with a
+    QGrpcChannelOptions containing the required customizations.
 
-    \l QGrpcCallOptions control channel parameters for the
-    specific unary call or \gRPC stream.
+    \section2 Content-Type
 
-    QGrpcHttp2Channel uses QGrpcChannelOptions to select the serialization
-    format for the protobuf messages. The serialization format can be set
-    either using the \c {content-type} metadata or by setting the
-    \l QGrpcChannelOptions::serializationFormat directly.
+    The \e{content-type} in \gRPC over HTTP/2 determines the message
+    serialization format. It must start with \c{application/grpc} and can
+    include a suffix. The format follows this scheme:
 
-    Using the following example you can create a QGrpcHttp2Channel with the
-    JSON serialization format using the \c {content-type} metadata:
     \code
-        auto channelJson = std::make_shared<
-        QGrpcHttp2Channel>(QGrpcChannelOptions{ QUrl("http://localhost:50051", QUrl::StrictMode) }
-                               .withMetadata({ { "content-type"_ba,
-                                                 "application/grpc+json"_ba } }));
+        "content-type": "application/grpc" [("+proto" / "+json" / {custom})]
     \endcode
 
-    Also you can use own serializer and custom \c {content-type} as following:
+    For example:
+    \list
+        \li \c{application/grpc+proto} specifies Protobuf encoding.
+        \li \c{application/grpc+json} specifies JSON encoding.
+    \endlist
+
+    The serialization format can be configured either by specifying the \c
+    {content-type} inside the metadata or by setting the \l{QGrpcChannelOptions::}
+    {serializationFormat} directly. By default, the \c {application/grpc}
+    content-type is used.
+
+    To configure QGrpcHttp2Channel with the JSON serialization format using
+    \c {content-type} metadata:
+
     \code
-        class DummySerializer : public QAbstractProtobufSerializer
-        {
-            ...
-        };
-        auto channel = std::make_shared<
-            QGrpcHttp2Channel>(QUrl("http://localhost:50051", QUrl::StrictMode), QGrpcChannelOptions{}
-                               .setSerializationFormat(QGrpcSerializationFormat{ "dummy",
-                                                          std::make_shared<DummySerializer>() }));
+        auto jsonChannel = std::make_shared<QGrpcHttp2Channel>(
+            QUrl("http://localhost:50051"_L1),
+            QGrpcChannelOptions().setMetadata({
+                { "content-type"_ba, "application/grpc+json"_ba },
+            })
+        );
     \endcode
 
-    QGrpcHttp2Channel will use the \c DummySerializer to serialize
-    and deserialize protobuf message and use the
-    \c { content-type: application/grpc+dummy } header when sending
-    HTTP/2 requests to server.
+    For a custom serializer and \c {content-type}, you can directly set the
+    serialization format:
 
-    \l QGrpcChannelOptions::serializationFormat has higher priority and
-    if the \c {content-type} metadata suffix doesn't match the
-    \l QGrpcSerializationFormat::suffix of the specified
-    \l QGrpcChannelOptions::serializationFormat QGrpcHttp2Channel produces
-    warning.
+    \include qgrpcserializationformat.cpp custom-serializer-code
 
-    \sa QGrpcChannelOptions, QGrpcCallOptions, QSslConfiguration
+    \code
+        auto dummyChannel = std::make_shared<QGrpcHttp2Channel>(
+            QUrl("http://localhost:50051"_L1),
+            QGrpcChannelOptions().setSerializationFormat(dummyFormat)
+        );
+    \endcode
+
+    \include qgrpcserializationformat.cpp custom-serializer-desc
+
+    \sa QAbstractGrpcChannel, QGrpcChannelOptions, QGrpcSerializationFormat
 */
 
 namespace {
@@ -870,7 +884,7 @@ QUrl QGrpcHttp2Channel::hostUri() const
 
 /*!
     \internal
-    Implementation of unary \gRPC call based on \l QNetworkAccessManager.
+    Initiates a unary \gRPC call.
 */
 void QGrpcHttp2Channel::call(std::shared_ptr<QGrpcOperationContext> operationContext)
 {
@@ -879,7 +893,7 @@ void QGrpcHttp2Channel::call(std::shared_ptr<QGrpcOperationContext> operationCon
 
 /*!
     \internal
-    Implementation of server-side \gRPC stream based on \l QNetworkAccessManager.
+    Initiates a server-side \gRPC stream.
 */
 void QGrpcHttp2Channel::serverStream(std::shared_ptr<QGrpcOperationContext> operationContext)
 {
@@ -888,7 +902,7 @@ void QGrpcHttp2Channel::serverStream(std::shared_ptr<QGrpcOperationContext> oper
 
 /*!
     \internal
-    Implementation of client-side \gRPC stream based on \l QNetworkAccessManager.
+    Initiates a client-side \gRPC stream.
 */
 void QGrpcHttp2Channel::clientStream(std::shared_ptr<QGrpcOperationContext> operationContext)
 {
@@ -897,7 +911,7 @@ void QGrpcHttp2Channel::clientStream(std::shared_ptr<QGrpcOperationContext> oper
 
 /*!
     \internal
-    Implementation of bidirectional \gRPC stream based on \l QNetworkAccessManager.
+    Initiates a bidirectional \gRPC stream.
 */
 void QGrpcHttp2Channel::bidiStream(std::shared_ptr<QGrpcOperationContext> operationContext)
 {
@@ -905,7 +919,8 @@ void QGrpcHttp2Channel::bidiStream(std::shared_ptr<QGrpcOperationContext> operat
 }
 
 /*!
-    Returns the newly created QProtobufSerializer shared pointer.
+    \internal
+    Returns the serializer of the channel.
 */
 std::shared_ptr<QAbstractProtobufSerializer> QGrpcHttp2Channel::serializer() const
 {

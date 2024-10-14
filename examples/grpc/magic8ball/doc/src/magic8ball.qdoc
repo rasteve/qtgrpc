@@ -8,19 +8,18 @@
     \meta tag {network,protobuf,grpc}
     \title Magic 8 Ball
 
-    \brief Creating a HTTP2 connection between a Qt GRPC client and
-    a C++ gRPC server.
+    \brief Creating a HTTP2 connection between a Qt gRPC client and a C++ gRPC server.
 
-    Magic 8 ball shows an answer it receives from a server:
-    \image answer.webp
+    Magic 8 ball sends a question to a server and displays the received answer:
+    \image magic8ballScreenshot.webp "Magic 8 ball example screenshot"
 
-    Magic 8 ball has the following components:
+    The example code includes the following components:
     \list
-    \li \c magic8ball Qt GRPC client application that includes
+    \li \c magic8ball Qt gRPC client application that uses
         the \l {qt_add_protobuf}{qt_add_protobuf()} and
         \l {qt_add_grpc}{qt_add_grpc()}
         CMake functions for message and service Qt code generation.
-    \li \c SimpleGrpcServer application that calls C++ gRPC plugin
+    \li \c server application that calls C++ gRPC plugin
         for generating server code and implementing simple server
         logic.
     \endlist
@@ -28,32 +27,37 @@
     \note you need the C++ gRPC plugin installed.
     Find details here: \l {Module prerequisites}
 
-    Both components use generated messages from the protobuf schema
-    described in the \c {exampleservice.proto} file:
+    Both components use generated messages from the protobuf schema described in the
+    \c {exampleservice.proto} file:
     \quotefromfile magic8ball/proto/exampleservice.proto
     \skipto syntax = "proto3";
     \printuntil
 
-    The client application connects to the \c localhost with port
-    \c 50051:
-    \quotefromfile magic8ball/Main.qml
-    \skipto id: grpcChannel
-    \printuntil hostUri: "http://localhost:50051"
+    The gRPC client is defined as a QML object \b{which is available after the code is compiled}.
+    \snippet magic8ball/Main.qml exampleServiceClient
+
+    The client service connects to the \c localhost with port \c {50051}, which is specified in the
+    gRPC channel options:
+    \snippet magic8ball/Main.qml channelOptions
 
     And sends a request to the server part:
     \quotefromfile magic8ball/Main.qml
-    \skipto function sendRequest()
-    \printuntil }
+    \snippet magic8ball/Main.qml requestAnswerFunction
+    \dots 8
+    \snippet magic8ball/Main.qml requestAnswerFunctionBody
 
-    Click the \uicontrol {Ask question} button to send
-    the request to the SimpleGrpcServer application.
+    \c answerMethod is a gRPC method that the client calls. It has four parameters: the request
+    object, a finish callback function, an error callback function and a
+    \l {GrpcCallOptions} object.
 
-    The SimpleGrpcServer application chooses a random answer from
-    the list of answers and sends the data to the client's port.
-    \quotefromfile magic8ball/grpc_server_example/serverrunner.cpp
-    \skipto Status ExampleServiceServiceImpl::answerMethod
-    \printuntil }
+    Click the \uicontrol {Ask} button to send the request to the magic8ball server.
 
-    After receiving a response the client application shows the answer.
+    \note You have to run the server in parallel with the client application.
 
+    The \c server application chooses a random answer from the list of answers and sends
+    the data to the client's port. It also checks that the request contains a non empty field
+    \c question. If the field is empty, it returns a \c StatusCode::INVALID_ARGUMENT
+    \snippet magic8ball/server/main.cpp answerMethod
+
+    After receiving a response, the client application shows the answer.
 */

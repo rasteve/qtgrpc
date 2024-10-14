@@ -47,8 +47,6 @@ sourcedirs  += ../../tools/doc
 exampledirs += src/snippets \
                ../../../examples/grpc
 
-imagedirs   += ../../../examples/grpc/doc/images
-
 navigation.landingpage = "Qt GRPC"
 navigation.cppclassespage = "Qt GRPC C++ Classes"
 navigation.qmltypespage = "Qt GRPC QML Types"

@@ -42,6 +42,7 @@ public:
         QProtobufMessage::swap(other);
         dptr.swap(other.dptr);
     }
+    Q_IMPLICIT operator QVariant() const;
     static void registerTypes();
 
 private:

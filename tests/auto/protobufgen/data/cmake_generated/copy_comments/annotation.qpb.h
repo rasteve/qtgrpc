@@ -96,6 +96,7 @@ public:
         QProtobufMessage::swap(other);
         dptr.swap(other.dptr);
     }
+    QPB_TST_QTPROTOBUFGEN_COPY_COMMENTS_EXPORT Q_IMPLICIT operator QVariant() const;
 
     /**
      * \brief Field annotation
@@ -150,6 +151,7 @@ public:
         QProtobufMessage::swap(other);
         dptr.swap(other.dptr);
     }
+    QPB_TST_QTPROTOBUFGEN_COPY_COMMENTS_EXPORT Q_IMPLICIT operator QVariant() const;
 
     /*!
      * \brief Field annotation
@@ -204,6 +206,7 @@ public:
         QProtobufMessage::swap(other);
         dptr.swap(other.dptr);
     }
+    QPB_TST_QTPROTOBUFGEN_COPY_COMMENTS_EXPORT Q_IMPLICIT operator QVariant() const;
 
     /*
      * Field annotation
@@ -259,6 +262,7 @@ public:
         QProtobufMessage::swap(other);
         dptr.swap(other.dptr);
     }
+    QPB_TST_QTPROTOBUFGEN_COPY_COMMENTS_EXPORT Q_IMPLICIT operator QVariant() const;
 
     QPB_TST_QTPROTOBUFGEN_COPY_COMMENTS_EXPORT QtProtobuf::sint32 testField() const;
     QPB_TST_QTPROTOBUFGEN_COPY_COMMENTS_EXPORT void setTestField(QtProtobuf::sint32 testField);
@@ -310,6 +314,7 @@ public:
         QProtobufMessage::swap(other);
         dptr.swap(other.dptr);
     }
+    QPB_TST_QTPROTOBUFGEN_COPY_COMMENTS_EXPORT Q_IMPLICIT operator QVariant() const;
 
     /* Field annotation */
     QPB_TST_QTPROTOBUFGEN_COPY_COMMENTS_EXPORT QtProtobuf::sint32 testField() const;
@@ -362,6 +367,7 @@ public:
         QProtobufMessage::swap(other);
         dptr.swap(other.dptr);
     }
+    QPB_TST_QTPROTOBUFGEN_COPY_COMMENTS_EXPORT Q_IMPLICIT operator QVariant() const;
 
     /** Field annotation */
     QPB_TST_QTPROTOBUFGEN_COPY_COMMENTS_EXPORT QtProtobuf::sint32 testField() const;
@@ -416,6 +422,7 @@ public:
         QProtobufMessage::swap(other);
         dptr.swap(other.dptr);
     }
+    QPB_TST_QTPROTOBUFGEN_COPY_COMMENTS_EXPORT Q_IMPLICIT operator QVariant() const;
 
     /*! Field annotation */
     QPB_TST_QTPROTOBUFGEN_COPY_COMMENTS_EXPORT QtProtobuf::sint32 testField() const;
@@ -470,6 +477,7 @@ public:
         QProtobufMessage::swap(other);
         dptr.swap(other.dptr);
     }
+    QPB_TST_QTPROTOBUFGEN_COPY_COMMENTS_EXPORT Q_IMPLICIT operator QVariant() const;
 
     /* Field annotation */
     QPB_TST_QTPROTOBUFGEN_COPY_COMMENTS_EXPORT QtProtobuf::sint32 testField() const;
@@ -525,6 +533,7 @@ public:
         QProtobufMessage::swap(other);
         dptr.swap(other.dptr);
     }
+    QPB_TST_QTPROTOBUFGEN_COPY_COMMENTS_EXPORT Q_IMPLICIT operator QVariant() const;
 
     /* Field annotation */
     QPB_TST_QTPROTOBUFGEN_COPY_COMMENTS_EXPORT QtProtobuf::sint32 testField() const;

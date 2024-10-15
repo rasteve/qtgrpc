@@ -86,6 +86,8 @@ public:
     static const char *AssignmentOperatorDefinitionTemplate();
     static const char *MoveAssignmentOperatorDeclarationTemplate();
     static const char *SwapDeclarationTemplate();
+    static const char *QVariantOperatorDeclarationTemplate();
+    static const char *QVariantOperatorDefinitionTemplate();
     static const char *EqualityDeclarationTemplate();
     static const char *ComparesEqualDefinitionTemplate();
     static const char *EqualOperatorMemberTemplate();

@@ -127,6 +127,7 @@ void MessageDefinitionPrinter::printClassDefinitionPrivate()
     printConstructors();
     printCopyFunctionality();
     printMoveSemantic();
+    printQVariantOperator();
     printComparisonOperators();
     printGetters();
     printPublicExtras();
@@ -336,6 +337,12 @@ void MessageDefinitionPrinter::printMoveSemantic()
 {
     assert(m_descriptor != nullptr);
     m_printer->Print(m_typeMap, CommonTemplates::MoveConstructorDefinitionTemplate());
+}
+
+void MessageDefinitionPrinter::printQVariantOperator()
+{
+    assert(m_descriptor != nullptr);
+    m_printer->Print(m_typeMap, CommonTemplates::QVariantOperatorDefinitionTemplate());
 }
 
 void MessageDefinitionPrinter::printComparisonOperators()

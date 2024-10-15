@@ -123,6 +123,12 @@ void MessageDeclarationPrinter::printMoveSemantic()
     m_printer->Print(m_typeMap, CommonTemplates::SwapDeclarationTemplate());
 }
 
+void MessageDeclarationPrinter::printQVariantOperator()
+{
+    assert(m_descriptor != nullptr);
+    m_printer->Print(m_typeMap, CommonTemplates::QVariantOperatorDeclarationTemplate());
+}
+
 void MessageDeclarationPrinter::printComparisonOperators()
 {
     assert(m_descriptor != nullptr);
@@ -494,6 +500,7 @@ void MessageDeclarationPrinter::printClassBody()
 
     printCopyFunctionality();
     printMoveSemantic();
+    printQVariantOperator();
 
     Outdent();
 

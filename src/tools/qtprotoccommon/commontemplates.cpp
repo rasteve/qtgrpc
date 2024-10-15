@@ -388,6 +388,19 @@ const char *CommonTemplates::SwapDeclarationTemplate()
            "}\n";
 }
 
+const char *CommonTemplates::QVariantOperatorDeclarationTemplate()
+{
+    return "$export_macro$Q_IMPLICIT operator QVariant() const;\n";
+}
+
+const char *CommonTemplates::QVariantOperatorDefinitionTemplate()
+{
+    return "$classname$::operator QVariant() const\n"
+           "{\n"
+           "    return QVariant::fromValue(*this);\n"
+           "}\n";
+}
+
 const char *CommonTemplates::EqualityDeclarationTemplate()
 {
     return "friend $export_macro$bool comparesEqual(const $classname$ &lhs, "

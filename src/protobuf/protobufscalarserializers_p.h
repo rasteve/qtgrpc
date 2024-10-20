@@ -274,7 +274,7 @@ template <typename V, if_unsigned_int<V> = true>
 template <typename V, if_i32_or_i64<V> = false>
 [[nodiscard]] bool deserializeBasic(QProtobufSelfcheckIterator &it, QVariant &variantValue)
 {
-    qsizetype size = sizeof(V);
+    constexpr qsizetype size = sizeof(V);
     if (it.bytesLeft() < size)
         return false;
     variantValue = QVariant::fromValue(qFromLittleEndian(qFromUnaligned<V>(it.data())));

@@ -389,38 +389,35 @@ bool QProtobufDeserializerImpl::deserializeScalarField(QVariant &value,
                                                            &fieldInfo)
 {
     QMetaType metaType = value.metaType();
-    bool isNonPacked = fieldInfo.fieldFlags().testFlag(QtProtobufPrivate::FieldFlag::NonPacked);
-    auto basicHandler = findIntegratedTypeHandler(metaType, isNonPacked);
 
+    // All repeated scalar types should have LenghtDelimited wiretype.
+    // If the wiretype received from the wire is not LenghtDelimited,
+    // that most probably means that we received the list in wrong
+    // format. This can happen because of mismatch of the field packed
+    // option in the protobuf schema on the wire ends.
+    // look for non-packed list in this case. Otherwise it's the regular
+    // packed repeated field.
+    // See the conformance tests
+    // Required.Proto3.ProtobufInput.ValidDataRepeated.*.UnpackedInput
+    // for details.
+    bool isNonPacked = m_wireType != QtProtobuf::WireTypes::LengthDelimited &&
+        fieldInfo.fieldFlags().testFlags(FieldFlag::Repeated);
+
+    auto basicHandler = findIntegratedTypeHandler(metaType, isNonPacked);
     if (!basicHandler)
         return false;
 
     if (basicHandler->wireType != m_wireType) {
-        // If the handler wiretype mismatches the wiretype received from the
-        // wire that most probably means that we received the list in wrong
-        // format. This can happen because of mismatch of the field packed
-        // option in the protobuf schema on the wire ends. Invert the
-        // isNonPacked flag and try to find the handler one more time to make
-        // sure that we cover this exceptional case.
-        // See the conformance tests
-        // Required.Proto3.ProtobufInput.ValidDataRepeated.*.UnpackedInput
-        // for details.
-        basicHandler = findIntegratedTypeHandler(metaType, !isNonPacked);
-        if (!basicHandler || basicHandler->wireType != m_wireType) {
-            setError(QAbstractProtobufSerializer::Error::InvalidHeader,
-                     QCoreApplication::translate("QtProtobuf",
-                                                 "Invalid wiretype for the %1 "
-                                                 "field number %1. Expected %2, received %3")
-                         .arg(QString::fromUtf8(metaType.name()))
-                         .arg(fieldInfo.fieldNumber())
-                         .arg(basicHandler ? static_cast<int>(basicHandler->wireType) : -1)
-                         .arg(static_cast<int>(m_wireType)));
-            value.clear();
-            return true;
-        }
-    }
-
-    if (!basicHandler->deserializer(m_it, value)) {
+        setError(QAbstractProtobufSerializer::Error::InvalidHeader,
+                 QCoreApplication::translate("QtProtobuf",
+                                             "Invalid wiretype for the %1 "
+                                             "field number %1. Expected %2, received %3")
+                     .arg(QString::fromUtf8(metaType.name()))
+                     .arg(fieldInfo.fieldNumber())
+                     .arg(basicHandler ? static_cast<int>(basicHandler->wireType) : -1)
+                     .arg(static_cast<int>(m_wireType)));
+        value.clear();
+    } else if (!basicHandler->deserializer(m_it, value)) {
         value.clear();
         setUnexpectedEndOfStreamError();
     }

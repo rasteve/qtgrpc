@@ -4,9 +4,7 @@
 import QtQuick
 
 Text {
-    wrapMode: Text.WordWrap
     font.family: "Helvetica"
     color: "white"
-    style: Text.Sunken
     font.pointSize: 18
 }

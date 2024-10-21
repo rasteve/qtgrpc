@@ -2,18 +2,16 @@
 # SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 cmake_minimum_required(VERSION 3.16)
-project(VehicleServerRunner LANGUAGES CXX)
+project(VehicleServer LANGUAGES CXX)
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
 
-# Qt6::Grpc module is not used directly in this project. But this allows to find Qt6::Grpc's
-# dependencies without setting extra cmake module paths.
 find_package(protobuf)
 find_package(gRPC)
 
 if(NOT TARGET gRPC::grpc_cpp_plugin OR NOT TARGET WrapProtoc::WrapProtoc
     OR NOT TARGET gRPC::grpc++)
-    message(WARNING "Dependencies of SimpleVehicleServer not found. Skipping.")
+    message(WARNING "Dependencies of VehicleServer not found. Skipping.")
     return()
 endif()
 
@@ -23,16 +21,19 @@ if(MINGW)
         " guaranteed otherwise.")
 endif()
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 set(proto_files
     "${CMAKE_CURRENT_LIST_DIR}/../proto/vehicleservice.proto"
-    "${CMAKE_CURRENT_LIST_DIR}/../proto/naviservice.proto")
+    "${CMAKE_CURRENT_LIST_DIR}/../proto/navigationservice.proto")
 set(out_dir ${CMAKE_CURRENT_BINARY_DIR})
 
 set(generated_files
     "${out_dir}/vehicleservice.pb.h" "${out_dir}/vehicleservice.pb.cc"
     "${out_dir}/vehicleservice.grpc.pb.h" "${out_dir}/vehicleservice.grpc.pb.cc"
-    "${out_dir}/naviservice.pb.h" "${out_dir}/naviservice.pb.cc"
-    "${out_dir}/naviservice.grpc.pb.h" "${out_dir}/naviservice.grpc.pb.cc")
+    "${out_dir}/navigationservice.pb.h" "${out_dir}/navigationservice.pb.cc"
+    "${out_dir}/navigationservice.grpc.pb.h" "${out_dir}/navigationservice.grpc.pb.cc")
 
 add_custom_command(
     OUTPUT ${generated_files}
@@ -53,24 +54,22 @@ add_custom_command(
 
 set_source_files_properties(${generated_files} PROPERTIES GENERATED TRUE)
 
-add_executable(SimpleVehicleServer
+qt_add_executable(vehicle_server
     ${generated_files}
-    ${CMAKE_CURRENT_LIST_DIR}/serverrunner.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/serverrunner.h
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
 )
 
-target_include_directories(SimpleVehicleServer
+target_include_directories(vehicle_server
     PRIVATE
     ${out_dir}
 )
 
-target_link_libraries(SimpleVehicleServer PRIVATE
+target_link_libraries(vehicle_server PRIVATE
     protobuf::libprotobuf
     gRPC::grpc++
 )
 
-install(TARGETS SimpleVehicleServer
+install(TARGETS vehicle_server
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"
     BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}"
     LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}"

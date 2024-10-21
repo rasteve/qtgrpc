@@ -172,6 +172,11 @@ findIntegratedTypeHandler(QMetaType metaType, bool nonPacked)
 }
 } // namespace
 
+QProtobufSerializerImpl::QProtobufSerializerImpl(QProtobufSerializerPrivate *parent) : m_parent(parent)
+{
+
+}
+
 QProtobufSerializerImpl::~QProtobufSerializerImpl() = default;
 
 void QProtobufSerializerImpl::reset()
@@ -182,7 +187,7 @@ void QProtobufSerializerImpl::reset()
 
 void QProtobufSerializerImpl::serializeUnknownFields(const QProtobufMessage *message)
 {
-    if (preserveUnknownFields) {
+    if (m_parent->preserveUnknownFields) {
         // Restore any unknown fields we have stored away:
         for (const auto &fields :
              std::as_const(QProtobufMessagePrivate::get(message)->unknownEntries)) {
@@ -498,7 +503,7 @@ bool QProtobufDeserializerImpl::decodeHeader(QProtobufSelfcheckIterator &it, int
             || wireType == QtProtobuf::WireTypes::LengthDelimited);
 }
 
-QProtobufSerializerPrivate::QProtobufSerializerPrivate() : deserializer(this)
+QProtobufSerializerPrivate::QProtobufSerializerPrivate() : serializer(this), deserializer(this)
 {
 }
 
@@ -566,7 +571,6 @@ QString QProtobufSerializer::lastErrorString() const
 */
 void QProtobufSerializer::shouldPreserveUnknownFields(bool preserveUnknownFields)
 {
-    d_ptr->serializer.preserveUnknownFields = preserveUnknownFields;
     d_ptr->preserveUnknownFields = preserveUnknownFields;
 }
 

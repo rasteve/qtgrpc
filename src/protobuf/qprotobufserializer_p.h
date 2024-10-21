@@ -39,7 +39,7 @@ QT_BEGIN_NAMESPACE
 class QProtobufSerializerImpl final : public QProtobufSerializerBase
 {
 public:
-    QProtobufSerializerImpl() = default;
+    explicit QProtobufSerializerImpl(QProtobufSerializerPrivate *parent);
     ~QProtobufSerializerImpl();
 
     const QByteArray &result() const { return m_result; }
@@ -47,7 +47,7 @@ public:
     void reset();
     void serializeUnknownFields(const QProtobufMessage *message);
 
-    bool preserveUnknownFields = true;
+    QProtobufSerializerPrivate *m_parent = nullptr;
 
 private:
     bool serializeEnum(QVariant &value,

@@ -1,9 +1,12 @@
 # Copyright (C) 2022 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-qt_find_package(protobuf
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG_save "${CMAKE_FIND_PACKAGE_PREFER_CONFIG}")
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
+qt_find_package(Protobuf
     MODULE_NAME global
 )
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG "${CMAKE_FIND_PACKAGE_PREFER_CONFIG_save}")
 
 # WrapProtoc::WrapProtoc could come from top-level CMakeLists.txt so avoid promoting it to GLOBAL
 # here in this case.

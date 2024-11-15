@@ -38,6 +38,8 @@ protected:
 
     virtual void setError(QAbstractProtobufSerializer::Error error, QAnyStringView errorString) = 0;
 
+    virtual bool deserializeMessageField(QProtobufMessage *message);
+
 private:
     virtual bool deserializeEnum(QVariant &value,
                                  const QtProtobufPrivate::QProtobufFieldInfo &fieldInfo) = 0;
@@ -45,7 +47,6 @@ private:
     virtual bool deserializeScalarField(QVariant &value,
                                         const QtProtobufPrivate::QProtobufFieldInfo &fieldInfo) = 0;
 
-    bool deserializeMessageField(QProtobufMessage *message);
     bool storeCachedValue(QProtobufMessage *message);
 
     QVariant m_cachedPropertyValue;

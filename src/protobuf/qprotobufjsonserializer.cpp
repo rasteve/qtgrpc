@@ -12,10 +12,12 @@
 #include <QtProtobuf/private/qtprotobufserializerhelpers_p.h>
 
 #include <QtCore/qcoreapplication.h>
+#include <QtCore/qdatetime.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qjsonarray.h>
 #include <QtCore/qjsondocument.h>
 #include <QtCore/qjsonobject.h>
+#include <QtCore/qtimezone.h>
 #include <QtCore/qvariant.h>
 
 #include <cmath>
@@ -71,12 +73,19 @@ public:
 
     void reset();
 
+protected:
+    void serializeMessageField(const QProtobufMessage *message,
+                               const QtProtobufPrivate::QProtobufFieldInfo &fieldInfo) override;
+
 private:
     bool serializeEnum(QVariant &value, const QProtobufFieldInfo &fieldInfo) override;
     bool serializeScalarField(const QVariant &value, const QProtobufFieldInfo &fieldInfo) override;
     void serializeMessageFieldBegin() override;
     void serializeMessageFieldEnd(const QProtobufMessage *message,
                                   const QProtobufFieldInfo &fieldInfo) override;
+
+    void serializeTimestamp(const QProtobufMessage *message,
+                            const QtProtobufPrivate::QProtobufFieldInfo &fieldInfo);
 
     QJsonObject m_result;
     QList<QJsonObject> m_state;
@@ -97,11 +106,16 @@ public:
     void setUnexpectedEndOfStreamError();
     void setInvalidFormatError();
 
+protected:
+    bool deserializeMessageField(QProtobufMessage *message) override;
+
 private:
     bool deserializeEnum(QVariant &value,
                          const QtProtobufPrivate::QProtobufFieldInfo &fieldInfo) override;
     int nextFieldIndex(QProtobufMessage *message) override;
     bool deserializeScalarField(QVariant &, const QtProtobufPrivate::QProtobufFieldInfo &) override;
+
+    [[nodiscard]] bool deserializeTimestamp(QProtobufMessage *message);
 
     struct JsonDeserializerState
     {
@@ -174,6 +188,47 @@ void QProtobufJsonSerializerImpl::reset()
 {
     m_result = {};
     m_state.clear();
+}
+
+void QProtobufJsonSerializerImpl::serializeMessageField(const QProtobufMessage *message,
+                                                        const QtProtobufPrivate::QProtobufFieldInfo
+                                                            &fieldInfo)
+{
+    if (message->propertyOrdering()
+            ->messageFullName()
+            .compare(QString::fromUtf8("google.protobuf.Timestamp"))
+        == 0) {
+        serializeTimestamp(message, fieldInfo);
+    } else {
+        QProtobufSerializerBase::serializeMessageField(message, fieldInfo);
+    }
+}
+
+void QProtobufJsonSerializerImpl::serializeTimestamp(const QProtobufMessage *message,
+                                                     const QtProtobufPrivate::QProtobufFieldInfo
+                                                         &fieldInfo)
+{
+    qint64 secs = 0;
+    qint32 nanos = 0;
+
+    if (const auto secondsValue = message->property("seconds"); secondsValue.canConvert<qint64>()) {
+        secs = secondsValue.value<qint64>();
+    } else {
+        qWarning() << "QProtobufJsonSerializerImpl::serializeTimestamp() failed to convert seconds";
+    }
+
+    if (const auto nanosValue = message->property("nanos"); nanosValue.canConvert<qint32>()) {
+        nanos = nanosValue.value<qint32>();
+    } else {
+        qWarning() << "QProtobufJsonSerializerImpl::serializeTimestamp() failed to convert nanos";
+    }
+
+    const auto datetime = QDateTime::fromMSecsSinceEpoch(secs * 1000 + nanos / 1000000,
+                                                         QTimeZone::UTC);
+    const auto datetimeISO = datetime.toString(Qt::ISODateWithMs);
+
+    const auto jsonName = fieldInfo.jsonName();
+    m_result.insert(jsonName.toString(), serializeCommon<QString>(datetimeISO));
 }
 
 bool QProtobufJsonSerializerImpl::serializeEnum(QVariant &value,
@@ -271,6 +326,53 @@ void QProtobufJsonDeserializerImpl::setError(QAbstractProtobufSerializer::Error 
     m_parent->lastErrorString = errorString.toString();
 }
 
+bool QProtobufJsonDeserializerImpl::deserializeMessageField(QProtobufMessage *message)
+{
+    if (!m_state.last().scalarValue.isNull()) {
+        if (message->propertyOrdering()
+                    ->messageFullName()
+                    .compare(QString::fromUtf8("google.protobuf.Timestamp"))
+                == 0
+            && m_state.last().scalarValue.isString()) {
+            return deserializeTimestamp(message);
+        }
+        setInvalidFormatError();
+        return false;
+    }
+    return QProtobufDeserializerBase::deserializeMessageField(message);
+}
+
+bool QProtobufJsonDeserializerImpl::deserializeTimestamp(QProtobufMessage *message)
+{
+    const auto tsString = m_state.last().scalarValue.toString();
+    // Protobuf requires upper-case letters in timestamp string be case sensitive.
+    if (tsString.toUpper() != tsString)
+        return false;
+
+    if (tsString.contains(u' '))
+        return false;
+
+    //Ensure the field either ends with Z or a valid offset
+    static const QRegularExpression TimeStampEnding(".+([\\+\\-]\\d{2}:\\d{2}|Z)$"_L1);
+    if (!TimeStampEnding.match(tsString).hasMatch())
+        return false;
+
+    const auto datetime = QDateTime::fromString(tsString, Qt::ISODateWithMs);
+
+    if (!datetime.isValid()) {
+        qWarning() << "QProtobufJsonDeserializerImpl::deserializeTimestamp() datetime is invalid";
+        return false;
+    }
+    const auto msecs = datetime.toMSecsSinceEpoch();
+    const qint64 seconds = msecs / 1000;
+    const qint32 nanos = (msecs % 1000) * 1000000;
+
+    message->setProperty("seconds", QVariant::fromValue(seconds));
+    message->setProperty("nanos", QVariant::fromValue(nanos));
+
+    return true;
+}
+
 bool QProtobufJsonDeserializerImpl::deserializeEnum(QVariant &value,
                                                     const QtProtobufPrivate::QProtobufFieldInfo
                                                         &fieldInfo)
@@ -363,14 +465,18 @@ int QProtobufJsonDeserializerImpl::nextFieldIndex(QProtobufMessage *message)
             state.obj.insert(*it, mapObject);
             m_state.push_back({ nextObject });
         } else if (flags.testFlag(QtProtobufPrivate::FieldFlag::Message)) {
-            if (!val.isObject()) {
+            if (val.isArray() || val.isUndefined() || val.isNull()) {
                 setInvalidFormatError();
                 return -1;
             }
 
-            auto nextObject = val.toObject();
-            ++state.index;
-            m_state.push_back({ nextObject });
+            if (val.isObject()) {
+                ++state.index;
+                m_state.push_back({ val.toObject() });
+            } else {
+                state.scalarValue = val;
+                ++state.index;
+            }
         } else {
             state.scalarValue = val;
             ++state.index;

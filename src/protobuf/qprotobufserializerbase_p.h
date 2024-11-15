@@ -42,10 +42,10 @@ public:
 protected:
     ~QProtobufSerializerBase();
 
-private:
-    void serializeMessageField(const QProtobufMessage *message,
-                               const QtProtobufPrivate::QProtobufFieldInfo &fieldInfo);
+    virtual void serializeMessageField(const QProtobufMessage *message,
+                                       const QtProtobufPrivate::QProtobufFieldInfo &fieldInfo);
 
+private:
     virtual bool serializeEnum(QVariant &value,
                                const QtProtobufPrivate::QProtobufFieldInfo &fieldInfo) = 0;
     virtual bool serializeScalarField(const QVariant &value,

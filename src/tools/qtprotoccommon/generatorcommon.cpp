@@ -205,7 +205,8 @@ TypeMap common::produceOverriddenTypeMap(const Descriptor *type, const Descripto
              { "property_type", fullName },
              { "property_list_type", fullListName },
              { "getter_type", scopeName },
-             { "setter_type", scopeName } };
+             { "setter_type", scopeName },
+             { "initializer", "{}" } };
 }
 
 TypeMap common::produceMessageTypeMap(const Descriptor *type, const Descriptor *scope)

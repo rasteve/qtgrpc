@@ -12,7 +12,8 @@ set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
 # Qt6::Grpc module is not used directly in this project. But this allows to find Qt6::Grpc's
 # dependencies without setting extra cmake module paths.
 find_package(Qt6 COMPONENTS Grpc)
-find_package(protobuf)
+
+find_package(Protobuf)
 find_package(gRPC)
 
 if(NOT TARGET gRPC::grpc_cpp_plugin OR NOT TARGET WrapProtoc::WrapProtoc

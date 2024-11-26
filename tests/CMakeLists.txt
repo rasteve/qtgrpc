@@ -8,7 +8,7 @@ if(QT_BUILD_STANDALONE_TESTS)
 endif()
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
-find_package(protobuf QUIET)
+find_package(Protobuf QUIET)
 find_package(gRPC QUIET)
 set(QT_BUILD_TESTS_BATCHED FALSE)
 qt_build_tests()

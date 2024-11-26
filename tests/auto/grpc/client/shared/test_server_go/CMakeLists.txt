@@ -1,7 +1,8 @@
 # Copyright (C) 2023 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
 
-find_package(protobuf)
+find_package(Protobuf)
 
 if(NOT WrapProtobuf_FOUND)
     message(WARNING "Dependencies of Qt GRPC test server not found. Skipping.")

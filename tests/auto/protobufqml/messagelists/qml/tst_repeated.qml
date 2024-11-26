@@ -31,8 +31,8 @@ TestCase {
     property complexMessage msg3;
 
     function initTestCase() {
-        msg1.testComplexField = "complexMessage 1"
-        msg2.testComplexField = "complexMessage 2"
+        msg1.testComplexField.testFieldString = "complexMessage 1"
+        msg2.testComplexField.testFieldString = "complexMessage 2"
 
         //TODO: see QTBUG-113690
         rStrMsg.testRepeatedString = ["String", "Second String",

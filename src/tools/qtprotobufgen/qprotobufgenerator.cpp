@@ -48,6 +48,7 @@ void QProtobufGenerator::GenerateSources(const FileDescriptor *file,
     assert(generatorContext != nullptr);
 
     std::string basename = utils::extractFileBasename(file->name());
+    std::string identifier = utils::toValidIdentifier(basename);
     std::string relativePath = common::generateRelativeFilePath(file, basename);
     std::unique_ptr<io::ZeroCopyOutputStream> sourceStream(
                 generatorContext->Open(relativePath + CommonTemplates::ProtoFileSuffix() + ".cpp"));
@@ -92,7 +93,7 @@ void QProtobufGenerator::GenerateSources(const FileDescriptor *file,
         messageDef.printClassRegistration(registrationPrinter.get());
     });
 
-    registrationPrinter->Print({{"proto_name", utils::capitalizeAsciiName(basename)}},
+    registrationPrinter->Print({{"proto_name", utils::capitalizeAsciiName(identifier)}},
                                CommonTemplates::ProtobufTypeRegistrarTemplate());
 
     CloseFileNamespaces(file, registrationPrinter.get());
@@ -113,6 +114,7 @@ void QProtobufGenerator::GenerateHeader(const FileDescriptor *file,
 
     const std::string basename = utils::extractFileBasename(file->name()) +
         CommonTemplates::ProtoFileSuffix();
+    std::string identifier = utils::toValidIdentifier(basename);
     std::string relativePath = common::generateRelativeFilePath(file, basename);
 
     std::unique_ptr<io::ZeroCopyOutputStream>
@@ -126,7 +128,7 @@ void QProtobufGenerator::GenerateHeader(const FileDescriptor *file,
     std::set<std::string> systemIncludes;
 
     const std::string
-        headerGuard = common::headerGuardFromFilename(basename + CommonTemplates::HeaderSuffix());
+        headerGuard = common::headerGuardFromFilename(identifier + CommonTemplates::HeaderSuffix());
     QProtobufGenerator::printHeaderGuardBegin(headerPrinter.get(), headerGuard);
     if (!Options::instance().exportMacroFilename().empty()) {
         std::string exportMacroFilename = Options::instance().exportMacroFilename();

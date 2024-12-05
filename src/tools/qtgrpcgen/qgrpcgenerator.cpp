@@ -176,6 +176,7 @@ bool QGrpcGenerator::GenerateClientServices(const FileDescriptor *file,
 
     const std::string basename = utils::extractFileBasename(file->name()) +
         GrpcTemplates::GrpcClientFileSuffix() + CommonTemplates::ProtoFileSuffix();
+    std::string identifier = utils::toValidIdentifier(basename);
     const std::string realtivePath = common::generateRelativeFilePath(file, basename);
 
     // Generate QML class
@@ -195,7 +196,7 @@ bool QGrpcGenerator::GenerateClientServices(const FileDescriptor *file,
     printDisclaimer(clientSourcePrinter.get());
 
     const std::string
-        headerGuard = common::headerGuardFromFilename(basename + CommonTemplates::HeaderSuffix());
+        headerGuard = common::headerGuardFromFilename(identifier + CommonTemplates::HeaderSuffix());
     QGrpcGenerator::printHeaderGuardBegin(clientHeaderPrinter.get(), headerGuard);
 
     clientSourcePrinter->Print(

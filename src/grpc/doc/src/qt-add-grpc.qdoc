@@ -24,6 +24,7 @@ Usually \c qtgrpcgen is invoked through the \c qt_add_grpc CMake macro.
         [EXPORT_MACRO <infix>]
         [OUTPUT_HEADERS <var>]
         [OUTPUT_TARGETS <var>]
+        [HEADER_GUARD <string>]
     )
 \endcode
 
@@ -84,6 +85,7 @@ target to the protobuf one:
     \include qtprotoccommon.qdocinc export_macro-cmake-li
     \include qtprotoccommon.qdocinc output_headers-li
     \include qtprotoccommon.qdocinc output_targets-li
+    \include qtprotoccommon.qdocinc header_guard-li
 \endlist
 
 \sa{The qtgrpcgen Tool}

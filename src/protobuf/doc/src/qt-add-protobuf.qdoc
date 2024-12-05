@@ -26,6 +26,7 @@ invoked through CMake using the \c qt_add_protobuf command.
         [EXPORT_MACRO <infix>]
         [OUTPUT_HEADERS <var>]
         [OUTPUT_TARGETS <var>]
+        [HEADER_GUARD <string>]
     )
 \endcode
 
@@ -108,6 +109,7 @@ link.
     \include qtprotoccommon.qdocinc export_macro-cmake-li
     \include qtprotoccommon.qdocinc output_headers-li
     \include qtprotoccommon.qdocinc output_targets-li
+    \include qtprotoccommon.qdocinc header_guard-li
 \endlist
 
 \sa{The qtprotobufgen Tool}

@@ -71,3 +71,10 @@
     specifies a variable that will store the list of generated targets. This
     list can be useful for defining custom project install rules.
 //! [output_targets-li]
+
+//! [header_guard-li]
+\li \c {HEADER_GUARD}
+    specifies the mechanism used for guarding generated header files from
+    multiple inclusion. Possible values are \c {<pragma | filename>}. Defaults
+    to \c {filename}
+//! [header_guard-li]

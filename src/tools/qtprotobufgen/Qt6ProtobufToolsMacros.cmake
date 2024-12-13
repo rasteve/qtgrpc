@@ -196,6 +196,11 @@ function(_qt_internal_protoc_generate target generator output_directory)
         GENERATED TRUE
     )
 
+    get_target_property(proto_files ${target} _qt_internal_proto_files)
+    list(APPEND proto_files "${arg_PROTO_FILES}")
+    list(REMOVE_DUPLICATES proto_files)
+    set_target_properties(${target} PROPERTIES _qt_internal_proto_files "${proto_files}")
+
     target_include_directories(${target} PUBLIC "$<BUILD_INTERFACE:${output_directory}>")
 endfunction()
 

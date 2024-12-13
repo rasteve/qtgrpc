@@ -27,7 +27,7 @@ if(NOT CMAKE_CROSSCOMPILING)
     # gives this possibility.
     set(__WrapProtoc_CMAKE_FIND_PACKAGE_PREFER_CONFIG_save ${CMAKE_FIND_PACKAGE_PREFER_CONFIG})
     set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
-    find_package(Protobuf ${WrapProtoc_FIND_VERSION} ${__WrapProtoc_find_package_args})
+    find_package(protobuf ${WrapProtoc_FIND_VERSION} NAMES protobuf Protobuf ${__WrapProtoc_find_package_args})
     set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ${__WrapProtoc_CMAKE_FIND_PACKAGE_PREFER_CONFIG_save})
     unset(__WrapProtoc_CMAKE_FIND_PACKAGE_PREFER_CONFIG_save)
 

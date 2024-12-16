@@ -151,39 +151,36 @@ void QProtobufGenerator::GenerateHeader(const FileDescriptor *file,
         externalIncludes.insert("QtQml/qqmllist.h");
     }
 
-    bool hasOneofFields = false;
-    bool hasOptionalFields = false;
     std::unordered_set<std::string> qtTypesSet;
-    common::iterateMessages(
-            file, [&](const Descriptor *message) {
-                if (message->oneof_decl_count() > 0)
-                    hasOneofFields = true;
 
-                if (message->full_name() == "google.protobuf.Timestamp") {
-                    externalIncludes.insert("QtCore/QDateTime");
-                }
-                if (message->full_name() == "google.protobuf.Any")
-                    externalIncludes.insert("QtProtobufWellKnownTypes/qprotobufanysupport.h");
+    const auto collectSpecialIncludes = [&](const Descriptor *message) {
+        if (message->oneof_decl_count() > 0)
+            externalIncludes.insert("QtProtobuf/qprotobufoneof.h");
 
-                for (int i = 0; i < message->field_count(); ++i) {
-                    const auto *field = message->field(i);
-                    if (field->type() == FieldDescriptor::TYPE_MESSAGE && !field->is_map()
-                        && !field->is_repeated() && common::isQtType(field)) {
-                        externalIncludes.insert(field->message_type()->file()->package()
-                                                + "/" + field->message_type()->name());
-                        qtTypesSet.insert(field->message_type()->file()->package());
-                    }
+        if (message->full_name() == "google.protobuf.Timestamp")
+            externalIncludes.insert("QtCore/QDateTime");
 
-                    if (common::isOptionalField(field))
-                        hasOptionalFields = true;
-                }
-            });
+        if (message->full_name() == "google.protobuf.Any")
+            externalIncludes.insert("QtProtobufWellKnownTypes/qprotobufanysupport.h");
 
-    if (hasOneofFields)
-        externalIncludes.insert("QtProtobuf/qprotobufoneof.h");
+        for (int i = 0; i < message->field_count(); ++i) {
+            const auto *field = message->field(i);
+            if (field->type() == FieldDescriptor::TYPE_MESSAGE && !field->is_map()
+                && !field->is_repeated() && common::isQtType(field)) {
+                externalIncludes.insert(field->message_type()->file()->package()
+                                        + "/" + field->message_type()->name());
+                qtTypesSet.insert(field->message_type()->file()->package());
+            }
 
-    if (hasOptionalFields)
-        systemIncludes.insert("optional");
+            if (common::isOptionalField(field))
+                systemIncludes.insert("optional");
+        }
+    };
+
+    common::iterateMessages(file, [&collectSpecialIncludes](const Descriptor *message){
+        collectSpecialIncludes(message);
+        common::iterateNestedMessages(message, collectSpecialIncludes);
+    });
 
     for (const auto &qtTypeInclude: qtTypesSet) {
         std::string qtTypeLower = qtTypeInclude;

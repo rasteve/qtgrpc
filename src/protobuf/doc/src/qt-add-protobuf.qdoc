@@ -26,7 +26,7 @@ invoked through CMake using the \c qt_add_protobuf command.
         [EXPORT_MACRO <infix>]
         [OUTPUT_HEADERS <var>]
         [OUTPUT_TARGETS <var>]
-        [HEADER_GUARD <string>]
+        [HEADER_GUARD <pragma|filename>]
     )
 \endcode
 

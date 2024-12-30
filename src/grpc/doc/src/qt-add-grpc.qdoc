@@ -24,7 +24,7 @@ Usually \c qtgrpcgen is invoked through the \c qt_add_grpc CMake macro.
         [EXPORT_MACRO <infix>]
         [OUTPUT_HEADERS <var>]
         [OUTPUT_TARGETS <var>]
-        [HEADER_GUARD <string>]
+        [HEADER_GUARD <pragma|filename>]
     )
 \endcode
 

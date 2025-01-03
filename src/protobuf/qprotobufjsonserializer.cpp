@@ -258,6 +258,7 @@ QProtobufJsonDeserializerImpl::~QProtobufJsonDeserializerImpl()
 
 void QProtobufJsonDeserializerImpl::reset(QJsonObject obj)
 {
+    clearCachedValue();
     m_state.clear();
     if (!obj.isEmpty())
         m_state.push_back({ obj });

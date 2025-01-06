@@ -58,10 +58,16 @@ endif()
 
 if(__WrapProtoc_protoc_imported_location)
     add_executable(WrapProtoc::WrapProtoc IMPORTED)
+    if(protobuf_VERSION)
+        set(__WrapProtoc_version_var protobuf_VERSION)
+    else()
+        set(__WrapProtoc_version_var Protobuf_VERSION)
+    endif()
     set_target_properties(WrapProtoc::WrapProtoc PROPERTIES
         IMPORTED_LOCATION "${__WrapProtoc_protoc_imported_location}"
-        _qt_internal_protobuf_version "${protobuf_VERSION}"
+        _qt_internal_protobuf_version "${${__WrapProtoc_version_var}}"
     )
+    unset(__WrapProtoc_version_var)
     set(WrapProtoc_FOUND TRUE)
 endif()
 

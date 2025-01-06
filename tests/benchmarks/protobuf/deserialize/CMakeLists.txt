@@ -5,7 +5,7 @@ qt6_add_library(tst_bench_deserialize_protobuf_base STATIC
     tst_bench_deserialize_protobuf_base.h
     tst_bench_deserialize_protobuf_base.cpp
 )
-
+qt_autogen_tools_initial_setup(tst_bench_deserialize_protobuf_base)
 target_link_libraries(tst_bench_deserialize_protobuf_base PRIVATE Qt::Test)
 
 set_target_properties(tst_bench_deserialize_protobuf_base PROPERTIES

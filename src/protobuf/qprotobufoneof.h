@@ -56,7 +56,7 @@ public:
     template<typename T, QtProtobuf::if_protobuf_message<T> = true>
     void setValue(T &&value, int fieldNumber)
     {
-        setValue(QVariant::fromValue<T>(std::move(value)), fieldNumber);
+        setValue(QVariant::fromValue<T>(std::forward<T>(value)), fieldNumber);
     }
 
     template <typename T, if_oneof_value_type<T> = true>

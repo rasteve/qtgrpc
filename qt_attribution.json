@@ -31,7 +31,7 @@
         "Version": "21.9"
     },
     {
-        "Id": "gRPC",
+        "Id": "grpc",
         "Name": "gRPC",
         "QDocModule": "qtgrpc",
         "QtUsage": "Used in the gRPC examples and tests.",

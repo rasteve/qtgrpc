@@ -78,7 +78,25 @@ target to the protobuf one:
 \list
     \include qtprotoccommon.qdocinc proto_files-li
     \include qtprotoccommon.qdocinc proto_includes-li
-    \include qtgrpcgen.qdocinc qml-li
+    \li \c {QML} generates the QML client API for the \gRPC service.
+        The argument requires the \c GrpcQuick Qt component.
+        \badcode
+            find_package(Qt6 6.8 REQUIRED COMPONENTS Quick Protobuf ProtobufQuick Grpc GrpcQuick)
+            ...
+            # Generate the protobuf types
+            qt_add_protobuf(test_service_client
+                PROTO_FILES
+                    test_service.protobuf
+                QML
+            )
+            ...
+            # Generate \gRPC client functionality
+            qt_add_grpc(test_service_client CLIENT
+                PROTO_FILES
+                    test_service.protobuf
+                QML
+            )
+        \endcode
     \include qtprotoccommon.qdocinc output_directory-li
     \include qtprotoccommon.qdocinc generate_package_subfolders-li
     \include qtprotoccommon.qdocinc copy_comments-li

@@ -46,6 +46,8 @@ link.
         module, a new QML module will be created implicitly.
 
         \badcode
+            find_package(Qt6 6.8 REQUIRED COMPONENTS Quick Protobuf ProtobufQuick)
+            ...
             qt_add_executable(target
                 ...
             )
@@ -60,6 +62,8 @@ link.
         attach the generated protobuf types to that module.
 
         \badcode
+            find_package(Qt6 6.8 REQUIRED COMPONENTS Quick Protobuf ProtobufQuick)
+            ...
             qt_add_qml_module(target
                 ...
             )
@@ -69,6 +73,9 @@ link.
                 ...
             )
         \endcode
+
+        \note If you use QML argument, you have to add ProtobufQuick into
+              find_package call. See examples above.
 
     \li \c {QML_URI}
         defines the \c URI used for the QML module.

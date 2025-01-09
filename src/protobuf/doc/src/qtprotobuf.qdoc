@@ -163,6 +163,9 @@
         .\vcpkg.exe install protobuf protobuf:x64-windows
         .\vcpkg.exe install grpc:x64-windows
     \endcode
+    \note We recommend using Manifest mode. This mode uses declarative JSON files
+    to describe metadata about the project. Manifest files are required to have
+    the vcpkg.json name.
 
     Finally, you can build and execute Qt-based projects with
     \c Protobuf and \c \gRPC support.

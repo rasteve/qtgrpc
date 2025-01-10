@@ -427,6 +427,69 @@
     \endcode
     \note The usage of duplicates will trigger a warning at compilation time.
 
+    \section1 QML types duplicates
+    If your application uses protobuf messages with names that
+    are already reserved in QML as QML types, then the correct behavior
+    cannot be guaranteed, and \c {Element is not creatable} error
+    would be triggered. To prevent an overlapping of QML Types,
+    use a <Qualifier> for QML module import, see
+    \l{Module (Namespace) Imports}.
+    For example, the following protobuf messages would be clashing
+    with the \l Text and \l Item QML types when imported into the
+    global namespace:
+    \badcode
+        syntax = "proto3";
+        package test.example;
+
+        message Text {
+            string text = 1;
+        }
+
+        message Item {
+            sint32 width = 1;
+            sint32 height = 2;
+        }
+    \endcode
+    Use the \l qt_add_protobuf macro with the \c QML option to
+    enable QML types generation from the above protobuf messages.
+    See the example below:
+    \badcode
+        qt_add_protobuf(example
+            PROTO_FILES
+                test.proto
+            QML
+            QML_URI
+                test.example
+        )
+    \endcode
+    Clashes with the QML types will be triggered if protobuf
+    messages are imported into a global namespace after the QtQuick
+    import. See the example below:
+    \badcode
+        import QtQuick
+        import test.example
+
+        Item {
+           id: root
+           ...
+           property ProtobufMessages.item itemData
+       }
+    \endcode
+    To avoid clashes with the QML types, use a \c <Qualifier>
+    to import the generated QML module into a local namespace.
+    See the example below:
+    \badcode
+        // No qualifier - global namespace
+        import QtQuick
+        // ProtobufMessages - a qualifier of local namespace.
+        import test.example as ProtobufMessages
+
+        Item {
+            id: root
+            ...
+            property ProtobufMessages.item itemData
+        }
+    \endcode
     \section2 QML keywords handling
     Pay attention to the keywords that are reserved in QML or
     JavaScript context, but not reserved in *.proto context.

@@ -654,6 +654,12 @@ function(qt6_add_protobuf target)
             )
         endif()
 
+        if(NOT TARGET ${QT_CMAKE_EXPORT_NAMESPACE}::ProtobufQuick)
+            message(FATAL_ERROR "QML option of the qt_add_protobuf command requires"
+                " ${QT_CMAKE_EXPORT_NAMESPACE}::ProtobufQuick target. Please make sure that you"
+                " have the respective Qt component found by adding it to the find_package call:"
+                "   find_package(${QT_CMAKE_EXPORT_NAMESPACE} COMPONENTS ProtobufQuick)")
+        endif()
         target_link_libraries(${target} PRIVATE
             ${QT_CMAKE_EXPORT_NAMESPACE}::ProtobufQuick
         )

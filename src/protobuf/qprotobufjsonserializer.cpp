@@ -638,4 +638,10 @@ bool QProtobufJsonSerializer::deserializeMessage(QProtobufMessage *message,
     return true;
 }
 
+bool ProtobufScalarJsonSerializers::validateJsonNumberString(const QString &input)
+{
+    static const QRegularExpression NumberValidator("^-?\\d+$"_L1);
+    return NumberValidator.match(input).hasMatch();
+}
+
 QT_END_NAMESPACE

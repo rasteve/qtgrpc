@@ -183,6 +183,7 @@ public:
     static const char *QtProtobufFieldEnum();
 
     static const char *ExportMacroTemplate();
+    static const char *CustomJsonHanderTemplate();
 
     static const char *QmlNamedElement();
     static const char *MocIncludeTemplate();

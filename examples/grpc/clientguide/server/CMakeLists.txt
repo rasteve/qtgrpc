@@ -8,6 +8,7 @@ set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
 
 find_package(protobuf)
 find_package(gRPC)
+find_package(Qt6 COMPONENTS ProtobufTools)
 
 if(NOT TARGET gRPC::grpc_cpp_plugin OR NOT TARGET WrapProtoc::WrapProtoc
     OR NOT TARGET gRPC::grpc++)

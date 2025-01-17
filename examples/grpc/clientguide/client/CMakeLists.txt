@@ -1,5 +1,6 @@
 # Copyright (C) 2024 The Qt Company Ltd.
 # SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
+cmake_minimum_required(VERSION 3.16)
 
 #! [0]
 set(proto_files "${CMAKE_CURRENT_LIST_DIR}/../proto/clientguide.proto")

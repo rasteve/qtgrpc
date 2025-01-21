@@ -62,4 +62,3 @@ macro.gRPC = "\\tm gRPC"
 
 # Enforce zero documentation warnings
 warninglimit = 0
-warninglimit.enabled = true

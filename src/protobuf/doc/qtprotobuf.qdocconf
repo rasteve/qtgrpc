@@ -55,7 +55,7 @@ qhp.QtProtobuf.subprojects.manual.title = Qt Protobuf
 qhp.QtProtobuf.subprojects.manual.indexTitle = Qt Protobuf module topics
 qhp.QtProtobuf.subprojects.manual.type = manual
 
-depends += qtdoc qtcore qtgui qtcmake qtgrpc qtwidgets qtqml qtquickcontrols
+depends += qtdoc qtcore qtgui qtcmake qtgrpc qtwidgets qtqml qtquick qtquickcontrols
 
 {headerdirs,sourcedirs} += .. \
                            ../../protobufqttypes \

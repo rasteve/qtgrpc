@@ -42,6 +42,7 @@ private Q_SLOTS:
     void assignmentOperatorTest();
     void moveOperatorTest();
     void rvalueSettersTest();
+    void rvalueOneOfSettersTest();
 
     void invalidMessageConstructorTest();
 };
@@ -449,18 +450,148 @@ void QtProtobufTypesGenerationTest::moveOperatorTest()
 
 void QtProtobufTypesGenerationTest::rvalueSettersTest()
 {
+    {
+        // String and ComplexMessage tests
+        ComplexMessage complexField;
+        SimpleStringMessage stringField;
+        stringField.setTestFieldString("Value1");
+        complexField.setTestComplexField(std::move(stringField));
+
+        stringField = complexField.testComplexField();
+        auto stringFieldCopy = complexField.testComplexField();
+        stringFieldCopy.setTestFieldString("Value2");
+        complexField.setTestComplexField(std::move(stringFieldCopy));
+        ComplexMessage complexFieldCopy = complexField;
+
+        QCOMPARE_EQ(stringField.testFieldString(), "Value1");
+        QCOMPARE_EQ(complexField.testComplexField().testFieldString(), "Value2");
+        QCOMPARE_EQ(complexField, complexFieldCopy);
+
+        stringFieldCopy = complexField.testComplexField();
+        SimpleStringMessage newStringField;
+        newStringField.setTestFieldString("Value3");
+        complexField.setTestComplexField(std::move(newStringField));
+        QCOMPARE_NE(complexField, complexFieldCopy);
+    }
+
+    {
+        // BytesMessage test
+        SimpleBytesMessage bytesMsg;
+        bytesMsg.setTestFieldBytes("\x01\x02\x03\x04\x05");
+        SimpleBytesMessage bytesMsgCopy = bytesMsg;
+        QCOMPARE_EQ(bytesMsg.testFieldBytes(), "\x01\x02\x03\x04\x05");
+        QCOMPARE_EQ(bytesMsg, bytesMsgCopy);
+
+        bytesMsg.setTestFieldBytes("\x01\x02\x03\x04\x05\x05");
+        QCOMPARE_NE(bytesMsg.testFieldBytes(), "\x01\x02\x03\x04\x05");
+        QCOMPARE_NE(bytesMsg, bytesMsgCopy);
+    }
+}
+
+void QtProtobufTypesGenerationTest::rvalueOneOfSettersTest()
+{
+    // OneOf test
+    OneofMessage oneOfField;
+    QVERIFY(!oneOfField.hasTestOneofComplexField());
+    QVERIFY(!oneOfField.hasTestOneofSecondComplexField());
+    QVERIFY(!oneOfField.hasSecondComplexField());
+    QVERIFY(!oneOfField.hasSecondSecondComplexField());
+
     ComplexMessage complexField;
-    SimpleStringMessage stringField;
-    stringField.setTestFieldString("Value1");
-    complexField.setTestComplexField(std::move(stringField));
+    {
+        SimpleStringMessage stringField;
+        stringField.setTestFieldString("Value1");
+        complexField.setTestComplexField(std::move(stringField));
 
-    stringField = complexField.testComplexField();
-    auto stringFieldCopy = complexField.testComplexField();
-    stringFieldCopy.setTestFieldString("Value2");
-    complexField.setTestComplexField(std::move(stringFieldCopy));
+        ComplexMessage complexFieldCopy = complexField;
+        oneOfField.setTestOneofComplexField(std::move(complexFieldCopy));
+        OneofMessage oneOfFieldCopy = oneOfField;
 
-    QCOMPARE(stringField.testFieldString(), "Value1");
-    QCOMPARE(complexField.testComplexField().testFieldString(), "Value2");
+        QVERIFY(oneOfField.hasTestOneofComplexField());
+        QCOMPARE_EQ(oneOfField, oneOfFieldCopy);
+        QCOMPARE_EQ(oneOfField.testOneofComplexField().testComplexField().testFieldString(),
+                    "Value1");
+        QVERIFY(!oneOfField.hasTestOneofSecondComplexField());
+        QVERIFY(!oneOfField.hasSecondComplexField());
+        QVERIFY(!oneOfField.hasSecondSecondComplexField());
+
+        oneOfField.setTestOneofComplexField(ComplexMessage());
+        QCOMPARE_NE(oneOfField, oneOfFieldCopy);
+        QCOMPARE_NE(oneOfField.testOneofComplexField().testComplexField().testFieldString(),
+                    "Value1");
+    }
+    {
+        SimpleStringMessage stringField;
+        stringField.setTestFieldString("Value2");
+        complexField.setTestComplexField(std::move(stringField));
+
+        ComplexMessage complexFieldCopy = complexField;
+        oneOfField.setTestOneofSecondComplexField(std::move(complexFieldCopy));
+        OneofMessage oneOfFieldCopy = oneOfField;
+
+        QVERIFY(!oneOfField.hasTestOneofComplexField());
+        QVERIFY(oneOfField.hasTestOneofSecondComplexField());
+        QCOMPARE_EQ(oneOfField, oneOfFieldCopy);
+        QCOMPARE_EQ(oneOfField.testOneofSecondComplexField().testComplexField().testFieldString(),
+                    "Value2");
+        QVERIFY(!oneOfField.hasSecondComplexField());
+        QVERIFY(!oneOfField.hasSecondSecondComplexField());
+
+        oneOfField.setTestOneofSecondComplexField(ComplexMessage());
+        QCOMPARE_NE(oneOfField, oneOfFieldCopy);
+        QCOMPARE_NE(oneOfField.testOneofSecondComplexField().testComplexField().testFieldString(),
+                    "Value2");
+    }
+
+    {
+        SimpleStringMessage stringField;
+        stringField.setTestFieldString("Value3");
+        complexField.setTestComplexField(std::move(stringField));
+
+        ComplexMessage complexFieldCopy = complexField;
+        oneOfField.setSecondComplexField(std::move(complexFieldCopy));
+        OneofMessage oneOfFieldCopy = oneOfField;
+
+        QCOMPARE_EQ(oneOfField, oneOfFieldCopy);
+        QVERIFY(!oneOfField.hasTestOneofComplexField());
+        QVERIFY(oneOfField.hasTestOneofSecondComplexField());
+        QCOMPARE_NE(oneOfField.testOneofSecondComplexField().testComplexField().testFieldString(),
+                    "Value2");
+        QVERIFY(oneOfField.hasSecondComplexField());
+        QCOMPARE_EQ(oneOfField.secondComplexField().testComplexField().testFieldString(),
+                    "Value3");
+        QVERIFY(!oneOfField.hasSecondSecondComplexField());
+
+        oneOfField.setSecondComplexField(ComplexMessage());
+        QCOMPARE_NE(oneOfField, oneOfFieldCopy);
+        QCOMPARE_NE(oneOfField.secondComplexField().testComplexField().testFieldString(),
+                    "Value3");
+    }
+
+    {
+        SimpleStringMessage stringField;
+        stringField.setTestFieldString("Value4");
+        complexField.setTestComplexField(std::move(stringField));
+
+        ComplexMessage complexFieldCopy = complexField;
+        oneOfField.setSecondSecondComplexField(std::move(complexFieldCopy));
+        OneofMessage oneOfFieldCopy = oneOfField;
+
+        QCOMPARE_EQ(oneOfField, oneOfFieldCopy);
+        QVERIFY(!oneOfField.hasTestOneofComplexField());
+        QVERIFY(oneOfField.hasTestOneofSecondComplexField());
+        QCOMPARE_NE(oneOfField.testOneofSecondComplexField().testComplexField().testFieldString(),
+                    "Value2");
+        QVERIFY(!oneOfField.hasSecondComplexField());
+        QVERIFY(oneOfField.hasSecondSecondComplexField());
+        QCOMPARE_EQ(oneOfField.secondSecondComplexField().testComplexField().testFieldString(),
+                    "Value4");
+
+        oneOfField.setSecondSecondComplexField(ComplexMessage());
+        QCOMPARE_NE(oneOfField, oneOfFieldCopy);
+        QCOMPARE_NE(oneOfField.secondSecondComplexField().testComplexField().testFieldString(),
+                    "Value4");
+    }
 }
 
 void QtProtobufTypesGenerationTest::invalidMessageConstructorTest()
